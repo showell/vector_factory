@@ -1,3 +1,26 @@
+function make_matrix_elem(matrix) {
+    const table = document.createElement("table");
+
+    function row(row_vector) {
+        const tr = document.createElement("tr");
+
+        function cell(n) {
+            const td = document.createElement("td");
+            td.innerText = n;
+            return td;
+        }
+
+        tr.appendChild(cell(row_vector[0]));
+        tr.appendChild(cell(row_vector[1]));
+        return tr;
+    }
+
+    table.appendChild(row(matrix[0]));
+    table.appendChild(row(matrix[1]));
+
+    return table;
+}
+
 function make_vector_elem(v) {
     const div = document.createElement("div");
     div.style.display = "flex";
@@ -16,12 +39,19 @@ function make_vector_elem(v) {
 }
 
 function set_up_bench() {
-    const in_vector = [0, 1];
-    in_vector_elem = make_vector_elem(in_vector);
-
     const wb = document.querySelector("#workbench");
+    const in_vector = [0, 1];
+    const matrix = [[0, 1], [2, 3]];
 
-    wb.querySelector("#in_vector").replaceChildren(in_vector_elem);
+    {
+        const in_vector_elem = make_vector_elem(in_vector);
+        wb.querySelector("#in_vector").replaceChildren(in_vector_elem);
+    }
+
+    {
+        const matrix_elem = make_matrix_elem(matrix);
+        wb.querySelector("#matrix").replaceChildren(matrix_elem);
+    }
 }
 
 function style_shelf() {
