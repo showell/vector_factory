@@ -24,26 +24,14 @@ function make_matrix_elem(matrix) {
 }
 
 function make_vector_elem(v) {
-    const div = document.createElement("div");
-    div.style.display = "flex";
-    div.style.flexDirection = "column";
-
-    function cell(n) {
-        const span = document.createElement("span");
-        span.innerText = n;
-        return span;
-    }
-
-    div.appendChild(cell(v[0]));
-    div.appendChild(cell(v[1]));
-
-    return div;
+    const [a, b] = v;
+    return make_matrix_elem([[a], [b]]);
 }
 
 function set_up_bench() {
     const wb = document.querySelector("#workbench");
     const in_vector = [0, 1];
-    const matrix = [[0, 1], [2, 3]];
+    const matrix = [[0, 1], [1, 1]];
 
     {
         const in_vector_elem = make_vector_elem(in_vector);
@@ -70,7 +58,7 @@ function style_workbench() {
 
     {
         const elem = wb.querySelector("#matrix");
-        elem.style.marginRight = "20px";
+        elem.style.marginRight = "10px";
     }
     
     {
