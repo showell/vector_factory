@@ -10,8 +10,10 @@ function make_matrix_elem(matrix) {
             return td;
         }
 
-        tr.appendChild(cell(row_vector[0]));
-        tr.appendChild(cell(row_vector[1]));
+        for (const n of row_vector) {
+            tr.appendChild(cell(n));
+
+        }
         return tr;
     }
 
