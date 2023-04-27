@@ -1,3 +1,5 @@
+let matrix = globalThis.APP.matrix;
+
 function make_matrix_elem(matrix) {
     const table = document.createElement("table");
 
@@ -24,8 +26,7 @@ function make_matrix_elem(matrix) {
 }
 
 function make_vector_elem(v) {
-    const [a, b] = v;
-    return make_matrix_elem([[a], [b]]);
+    return make_matrix_elem(matrix.from_vector(v));
 }
 
 function set_up_bench() {
