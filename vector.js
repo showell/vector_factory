@@ -8,11 +8,11 @@
             result += v1[i] * v2[i];
         }
         return result;
-    }
+    };
 
     matrix.from_vector = (v) => {
         return v.map((e) => [e]);
-    }
+    };
 
     matrix.transpose = (rows) => {
         const result = rows[0].map(() => []);
@@ -24,7 +24,7 @@
         }
 
         return result;
-    }
+    };
 
     matrix.multiply = (A_rows, B_rows) => {
         const B_cols = matrix.transpose(B_rows);
@@ -36,7 +36,7 @@
         const C_cols = B_cols.map(C_col);
         const C_rows = matrix.transpose(C_cols);
         return C_rows;
-    }
+    };
 
     const test = () => {
         function display_matrix(m) {
@@ -45,7 +45,7 @@
                 console.log(`${row}`);
             }
         }
-        
+
         const v1 = [1, 2];
         const v2 = [10, 30];
         const m1 = [
@@ -61,8 +61,8 @@
         display_matrix(m1);
         display_matrix(m2);
         display_matrix(matrix.multiply(m1, m2));
-    }
-            
+    };
+
     if (globalThis.window) {
         globalThis.APP.matrix = matrix;
     } else {

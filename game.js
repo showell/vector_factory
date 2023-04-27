@@ -14,7 +14,6 @@ function make_matrix_elem(matrix) {
 
         for (const n of row_vector) {
             tr.appendChild(cell(n));
-
         }
         return tr;
     }
@@ -32,7 +31,10 @@ function make_vector_elem(v) {
 function set_up_bench() {
     const wb = document.querySelector("#workbench");
     const in_vector = [0, 1];
-    const matrix = [[0, 1], [1, 1]];
+    const matrix = [
+        [0, 1],
+        [1, 1],
+    ];
 
     {
         const in_vector_elem = make_vector_elem(in_vector);
@@ -61,7 +63,7 @@ function style_workbench() {
         const elem = wb.querySelector("#matrix");
         elem.style.marginRight = "10px";
     }
-    
+
     {
         const elem = wb.querySelector("#in_vector");
         elem.style.marginRight = "40px";
