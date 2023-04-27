@@ -81,12 +81,23 @@ function box_matrix(n) {
     return div.matrix_info.matrix;
 }
 
+function append_to_box1(elem) {
+    elem.matrix_info.loc = "box1";
+    document.querySelector("#machine_box1").append(elem);
+}
+
+function append_to_box2(elem) {
+    elem.matrix_info.loc = "box2";
+    document.querySelector("#machine_box2").append(elem);
+}
+
 function do_matrix_multiply() {
     const A = box_matrix(1)
     const B = box_matrix(2);
     const C = matrix.multiply(A, B);
 
     const elem = make_matrix_elem(C);
+    elem.matrix_info.loc = "box3";
     document.querySelector("#machine_box3").append(elem);
 }
 
@@ -97,8 +108,8 @@ function populate() {
     ];
     const m_01 = matrix.from_vector([0, 1]);
 
-    document.querySelector("#machine_box1").append(make_matrix_elem(q_matrix));
-    document.querySelector("#machine_box2").append(make_matrix_elem(m_01));
+    append_to_box1(make_matrix_elem(q_matrix));
+    append_to_box2(make_matrix_elem(m_01));
     do_matrix_multiply();
 }
 
