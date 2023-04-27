@@ -113,24 +113,45 @@ function box_matrix(n) {
     return div.matrix_info.matrix;
 }
 
+function box(n) {
+    return document.querySelector(`#machine_box${n}`);
+}
+
 function append_to_box1(elem) {
     elem.matrix_info.loc = "box1";
-    document.querySelector("#machine_box1").append(elem);
+    box(1).append(elem);
 }
 
 function append_to_box2(elem) {
     elem.matrix_info.loc = "box2";
-    document.querySelector("#machine_box2").append(elem);
+    box(2).append(elem);
 }
 
 function do_matrix_multiply() {
     const A = box_matrix(1);
     const B = box_matrix(2);
-    const C = matrix.multiply(A, B);
 
-    const elem = make_matrix_elem(C);
-    elem.matrix_info.loc = "box3";
-    document.querySelector("#machine_box3").append(elem);
+    if (A && B) {
+        const C = matrix.multiply(A, B);
+
+        const elem = make_matrix_elem(C);
+        elem.matrix_info.loc = "box3";
+        animate_machine_generation(elem);
+    }
+}
+
+function animate_machine_generation(elem) {
+    const orig_color = box(1).style.background;
+
+    function finish() {
+        box(3).append(elem);
+        box(1).style.background = orig_color;
+        box(2).style.background = orig_color;
+    }
+
+    box(1).style.background = "cyan";
+    box(2).style.background = "cyan";
+    setTimeout(finish, 500);
 }
 
 function populate() {
