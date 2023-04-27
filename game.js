@@ -69,28 +69,19 @@ function do_matrix_multiply(A, B) {
     const C = matrix.multiply(A, B);
 
     const elem = make_matrix_elem(C);
-    document.querySelector("#out_vector").replaceChildren(elem);
+    document.querySelector("#machine_box3").append(elem);
 }
 
-function set_up_bench() {
-    const wb = document.querySelector("#workbench");
-    const in_vector = matrix.from_vector([0, 1]);
+function populate() {
     const q_matrix = [
         [0, 1],
         [1, 1],
     ];
+    const m_01 = matrix.from_vector([0, 1]);
 
-    do_matrix_multiply(q_matrix, in_vector);
-
-    {
-        const in_vector_elem = make_matrix_elem(in_vector);
-        wb.querySelector("#in_vector").replaceChildren(in_vector_elem);
-    }
-
-    {
-        const matrix_elem = make_matrix_elem(q_matrix);
-        wb.querySelector("#matrix").replaceChildren(matrix_elem);
-    }
+    document.querySelector("#machine_box1").append(make_matrix_elem(q_matrix));
+    document.querySelector("#machine_box2").append(make_matrix_elem(m_01));
+    do_matrix_multiply(q_matrix, m_01);
 }
 
 function style_shelf() {
@@ -117,24 +108,24 @@ function style_workbench() {
     wb.style.marginBottom = "10px";
 
     {
-        const elem = wb.querySelector("#matrix");
+        const elem = wb.querySelector("#machine_box1");
         style_machine_container(elem);
         elem.style.marginRight = "10px";
     }
 
     {
-        const elem = wb.querySelector("#in_vector");
+        const elem = wb.querySelector("#machine_box2");
         elem.style.marginRight = "40px";
         style_machine_container(elem);
     }
 
     {
-        const elem = wb.querySelector("#out_vector");
+        const elem = wb.querySelector("#machine_box3");
         style_machine_container(elem);
     }
 }
 
 style_shelf();
 style_workbench();
-set_up_bench();
+populate();
 enable_shelf();
