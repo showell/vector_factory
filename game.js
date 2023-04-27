@@ -3,6 +3,11 @@ let matrix = globalThis.APP.matrix;
 function make_matrix_elem(matrix) {
     const table = document.createElement("table");
     table.style.display = "inline-block";
+    table.style.borderLeft = "1px solid black";
+    table.style.borderRight = "1px solid black";
+    table.style.background = "aliceblue";
+    table.style.padding = "5px";
+    table.draggable = true;
 
     function row(row_vector) {
         const tr = document.createElement("tr");
@@ -61,10 +66,10 @@ function style_shelf() {
 
 function style_machine_container(c) {
     c.style.border = "1px solid green";
-    c.style.height = "50px";
-    c.style.minWidth = "30px";
+    c.style.height = "60px";
+    c.style.minWidth = "60px";
     c.style.textAlign = "center";
-    c.style.padding = "5px";
+    c.style.padding = "7px";
 }
 
 function style_workbench() {
@@ -82,6 +87,11 @@ function style_workbench() {
     {
         const elem = wb.querySelector("#in_vector");
         elem.style.marginRight = "40px";
+        style_machine_container(elem);
+    }
+
+    {
+        const elem = wb.querySelector("#out_vector");
         style_machine_container(elem);
     }
 }
