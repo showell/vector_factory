@@ -10,6 +10,7 @@ function enable_shelf() {
     }
 
     function drop() {
+        console.log(dragged_elem.matrix_info);
         shelf.append(dragged_elem);
     }
 
@@ -51,6 +52,7 @@ function make_matrix_elem(matrix) {
     div.append(table);
     div.draggable = true;
     div.style.display = "inline-block";
+    div.className = "matrix";
 
     function dragstart(e) {
         dragged_elem = e.target;
@@ -62,10 +64,26 @@ function make_matrix_elem(matrix) {
 
     div.addEventListener("dragstart", dragstart);
     div.addEventListener("dragend", dragend);
+
+    div.matrix_info = {
+        matrix: matrix,
+    };
     return div;
 }
 
-function do_matrix_multiply(A, B) {
+function box_matrix(n) {
+    const div = document.querySelector(`#machine_box${n} .matrix`)
+
+    if (!div) {
+        return undefined;
+    }
+
+    return div.matrix_info.matrix;
+}
+
+function do_matrix_multiply() {
+    const A = box_matrix(1)
+    const B = box_matrix(2);
     const C = matrix.multiply(A, B);
 
     const elem = make_matrix_elem(C);
@@ -81,7 +99,7 @@ function populate() {
 
     document.querySelector("#machine_box1").append(make_matrix_elem(q_matrix));
     document.querySelector("#machine_box2").append(make_matrix_elem(m_01));
-    do_matrix_multiply(q_matrix, m_01);
+    do_matrix_multiply();
 }
 
 function style_shelf() {
