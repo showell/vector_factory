@@ -104,7 +104,7 @@ function make_matrix_elem(matrix) {
 }
 
 function box_matrix(n) {
-    const div = document.querySelector(`#machine_box${n} .matrix`)
+    const div = document.querySelector(`#machine_box${n} .matrix`);
 
     if (!div) {
         return undefined;
@@ -124,7 +124,7 @@ function append_to_box2(elem) {
 }
 
 function do_matrix_multiply() {
-    const A = box_matrix(1)
+    const A = box_matrix(1);
     const B = box_matrix(2);
     const C = matrix.multiply(A, B);
 
