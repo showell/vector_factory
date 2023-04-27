@@ -6,16 +6,48 @@ function enable_shelf() {
     const shelf = document.querySelector("#shelf");
 
     function dragover(e) {
+        if (dragged_elem.matrix_info.loc == "shelf") {
+            return;
+        }
         e.preventDefault();
     }
 
     function drop() {
-        console.log(dragged_elem.matrix_info);
         shelf.append(dragged_elem);
+        if (dragged_elem.matrix_info.loc == "box3") {
+            do_matrix_multiply();
+        }
+        dragged_elem.matrix_info.loc = "shelf";
     }
 
     shelf.addEventListener("dragover", dragover);
     shelf.addEventListener("drop", drop);
+}
+
+function enable_box2() {
+    const box = document.querySelector("#machine_box2");
+
+    function dragover(e) {
+        if (box_matrix(2) || dragged_elem.matrix_info.loc == "box2") {
+            return;
+        }
+        if (box_matrix(3) && dragged_elem.matrix_info.loc != "box3") {
+            return;
+        }
+        e.preventDefault();
+    }
+
+    function drop() {
+        dragged_elem.matrix_info.loc = "box2";
+        box.append(dragged_elem);
+
+        if (box_matrix(1)) {
+            do_matrix_multiply();
+        }
+    }
+
+    box.addEventListener("dragover", dragover);
+    box.addEventListener("drop", drop);
 }
 
 function make_matrix_table(matrix) {
@@ -158,3 +190,4 @@ style_shelf();
 style_workbench();
 populate();
 enable_shelf();
+enable_box2();
