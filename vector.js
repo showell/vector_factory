@@ -1,14 +1,13 @@
-{
-    let vector = {};
-    let matrix = {};
+function dot_product(v1, v2) {
+    let result = 0;
+    for (let i = 0; i < v1.length; ++i) {
+        result += v1[i] * v2[i];
+    }
+    return result;
+}
 
-    vector.dot_product = (v1, v2) => {
-        let result = 0;
-        for (let i = 0; i < v1.length; ++i) {
-            result += v1[i] * v2[i];
-        }
-        return result;
-    };
+{
+    let matrix = {};
 
     matrix.from_vector = (v) => {
         return v.map((e) => [e]);
@@ -30,7 +29,7 @@
         const B_cols = matrix.transpose(B_rows);
 
         function C_col(col) {
-            return A_rows.map((row) => vector.dot_product(row, col));
+            return A_rows.map((row) => dot_product(row, col));
         }
 
         const C_cols = B_cols.map(C_col);
@@ -46,8 +45,7 @@
             }
         }
 
-        const v1 = [1, 2];
-        const v2 = [10, 30];
+        const v = [10, 30];
         const m1 = [
             [1, 2],
             [3, 4],
@@ -56,8 +54,7 @@
             [100, 20],
             [5, 1000],
         ];
-        console.log(vector.dot_product(v1, v2));
-        display_matrix(matrix.from_vector(v2));
+        display_matrix(matrix.from_vector(v));
         display_matrix(m1);
         display_matrix(m2);
         display_matrix(matrix.multiply(m1, m2));
