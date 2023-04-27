@@ -1,13 +1,28 @@
 let matrix = globalThis.APP.matrix;
 
-function make_matrix_elem(matrix) {
+let dragged_elem;
+
+function enable_shelf() {
+    const shelf = document.querySelector("#shelf");
+
+    function dragover(e) {
+        e.preventDefault();
+    }
+
+    function drop() {
+        shelf.append(dragged_elem);
+    }
+
+    shelf.addEventListener("dragover", dragover);
+    shelf.addEventListener("drop", drop);
+}
+
+function make_matrix_table(matrix) {
     const table = document.createElement("table");
-    table.style.display = "inline-block";
     table.style.borderLeft = "1px solid black";
     table.style.borderRight = "1px solid black";
     table.style.background = "aliceblue";
     table.style.padding = "5px";
-    table.draggable = true;
 
     function row(row_vector) {
         const tr = document.createElement("tr");
@@ -28,6 +43,26 @@ function make_matrix_elem(matrix) {
     table.appendChild(row(matrix[1]));
 
     return table;
+}
+
+function make_matrix_elem(matrix) {
+    const div = document.createElement("div");
+    const table = make_matrix_table(matrix);
+    div.append(table);
+    div.draggable = true;
+    div.style.display = "inline-block";
+
+    function dragstart(e) {
+        dragged_elem = e.target;
+    }
+
+    function dragend() {
+        dragged_elem = undefined;
+    }
+
+    div.addEventListener("dragstart", dragstart);
+    div.addEventListener("dragend", dragend);
+    return div;
 }
 
 function do_matrix_multiply(A, B) {
@@ -61,6 +96,9 @@ function set_up_bench() {
 function style_shelf() {
     const elem = document.getElementById("shelf");
     elem.style.border = "1px solid blue";
+    elem.style.height = "60px";
+    elem.style.display = "flex";
+    elem.style.flexDirection = "row";
     elem.style.marginBottom = "30px";
 }
 
@@ -99,3 +137,4 @@ function style_workbench() {
 style_shelf();
 style_workbench();
 set_up_bench();
+enable_shelf();
