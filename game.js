@@ -1,6 +1,7 @@
 let matrix = globalThis.APP.matrix;
 
 let dragged_elem;
+let in_progress = false;
 
 function enable_shelf() {
     const shelf = document.querySelector("#shelf");
@@ -25,8 +26,6 @@ function enable_shelf() {
 }
 
 function enable_box2() {
-    const box = document.querySelector("#machine_box2");
-
     function dragover(e) {
         if (box_matrix(2) || dragged_elem.matrix_info.loc == "box2") {
             return;
@@ -38,16 +37,11 @@ function enable_box2() {
     }
 
     function drop() {
-        dragged_elem.matrix_info.loc = "box2";
-        box.append(dragged_elem);
-
-        if (box_matrix(1)) {
-            do_matrix_multiply();
-        }
+        append_to_box2(dragged_elem);
     }
 
-    box.addEventListener("dragover", dragover);
-    box.addEventListener("drop", drop);
+    box(2).addEventListener("dragover", dragover);
+    box(2).addEventListener("drop", drop);
 }
 
 function make_matrix_table(matrix) {
@@ -120,18 +114,21 @@ function box(n) {
 function append_to_box1(elem) {
     elem.matrix_info.loc = "box1";
     box(1).append(elem);
+    do_matrix_multiply();
 }
 
 function append_to_box2(elem) {
     elem.matrix_info.loc = "box2";
     box(2).append(elem);
+    do_matrix_multiply();
 }
 
 function do_matrix_multiply() {
     const A = box_matrix(1);
     const B = box_matrix(2);
+    const C = box_matrix(3);
 
-    if (A && B) {
+    if (A && B && !C && !in_progress) {
         const C = matrix.multiply(A, B);
 
         const elem = make_matrix_elem(C);
@@ -143,14 +140,20 @@ function do_matrix_multiply() {
 function animate_machine_generation(elem) {
     const orig_color = box(1).style.background;
 
+    function start() {
+        in_progress = true;
+        box(1).style.background = "cyan";
+        box(2).style.background = "cyan";
+    }
+
     function finish() {
         box(3).append(elem);
         box(1).style.background = orig_color;
         box(2).style.background = orig_color;
+        in_progress = false;
     }
 
-    box(1).style.background = "cyan";
-    box(2).style.background = "cyan";
+    start();
     setTimeout(finish, 500);
 }
 
@@ -163,7 +166,6 @@ function populate() {
 
     append_to_box1(make_matrix_elem(q_matrix));
     append_to_box2(make_matrix_elem(m_01));
-    do_matrix_multiply();
 }
 
 function style_shelf() {
