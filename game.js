@@ -173,6 +173,96 @@ function append_to_box2(elem) {
     do_matrix_multiply();
 }
 
+/*
+
+    DOM WIDGETS
+
+*/
+
+function make_matrix_table(matrix) {
+    const table = document.createElement("table");
+    table.className = "matrix-table";
+
+    style_matrix_table(table);
+
+    function row(row_vector) {
+        const tr = document.createElement("tr");
+
+        function cell(n) {
+            const td = document.createElement("td");
+            td.innerText = n;
+            return td;
+        }
+
+        for (const n of row_vector) {
+            tr.appendChild(cell(n));
+        }
+        return tr;
+    }
+
+    table.appendChild(row(matrix[0]));
+    table.appendChild(row(matrix[1]));
+
+    return table;
+}
+
+function make_matrix_elem(matrix) {
+    const table = make_matrix_table(matrix);
+
+    const div = document.createElement("div");
+    div.className = "matrix-div";
+    div.append(table);
+    style_matrix_div(div);
+
+    div.matrix_info = {
+        matrix: matrix,
+    };
+
+    allow_dragging_of_matrix(div);
+
+    return div;
+}
+
+/*
+
+----------------------
+
+ANIMATIONS
+
+*/
+
+function animate_trashing(elem) {
+    const trash = document.querySelector("#trash");
+    trash.append(elem);
+
+    setTimeout(() => {
+        elem.remove();
+    }, 800);
+}
+
+function animate_machine_generation(elem) {
+    function start() {
+        in_progress = true;
+        style_machine_running();
+    }
+
+    function finish() {
+        box(3).append(elem);
+        elem.matrix_info.loc = "box3";
+        style_machine_idle();
+        in_progress = false;
+    }
+
+    start();
+    setTimeout(finish, 700);
+}
+
+/*
+
+---------------------
+
+    MISC
+*/
 
 let matrix = globalThis.APP.matrix;
 let in_progress = false;
@@ -222,59 +312,6 @@ function populate_shelf() {
     ]);
 }
 
-function animate_trashing(elem) {
-    const trash = document.querySelector("#trash");
-    trash.append(elem);
-
-    setTimeout(() => {
-        elem.remove();
-    }, 800);
-}
-
-function make_matrix_table(matrix) {
-    const table = document.createElement("table");
-    table.className = "matrix-table";
-
-    style_matrix_table(table);
-
-    function row(row_vector) {
-        const tr = document.createElement("tr");
-
-        function cell(n) {
-            const td = document.createElement("td");
-            td.innerText = n;
-            return td;
-        }
-
-        for (const n of row_vector) {
-            tr.appendChild(cell(n));
-        }
-        return tr;
-    }
-
-    table.appendChild(row(matrix[0]));
-    table.appendChild(row(matrix[1]));
-
-    return table;
-}
-
-function make_matrix_elem(matrix) {
-    const table = make_matrix_table(matrix);
-
-    const div = document.createElement("div");
-    div.className = "matrix-div";
-    div.append(table);
-    style_matrix_div(div);
-
-    div.matrix_info = {
-        matrix: matrix,
-    };
-
-    allow_dragging_of_matrix(div);
-
-    return div;
-}
-
 function do_matrix_multiply() {
     const A = box_matrix(1);
     const B = box_matrix(2);
@@ -292,23 +329,6 @@ function do_matrix_multiply() {
     }
 }
 
-function animate_machine_generation(elem) {
-    function start() {
-        in_progress = true;
-        style_machine_running();
-    }
-
-    function finish() {
-        box(3).append(elem);
-        elem.matrix_info.loc = "box3";
-        style_machine_idle();
-        in_progress = false;
-    }
-
-    start();
-    setTimeout(finish, 700);
-}
-
 function populate_machine() {
     const q_matrix = [
         [0, 1],
@@ -322,7 +342,7 @@ function populate_machine() {
 
 /*
 
-STYLES
+    I try to make all JS styling go through the same helper:
 
 */
 
@@ -341,8 +361,14 @@ function setStyles(elem, styles) {
         elem.style[f] = v;
     }
 
-    console.trace(info.join("\n"));
+    console.info(info.join("\n"));
 }
+
+/*
+
+STYLES
+
+*/
 
 function style_body() {
     setStyles(document.body, {
