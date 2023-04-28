@@ -25,6 +25,10 @@ function dot_product(v1, v2) {
         return result;
     };
 
+    matrix.allow_multiply = (A_rows, B_rows) => {
+        return A_rows[0].length == B_rows.length;
+    };
+
     matrix.multiply = (A_rows, B_rows) => {
         const B_cols = matrix.transpose(B_rows);
 
