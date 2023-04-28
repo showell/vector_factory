@@ -1,3 +1,17 @@
+function build_application() {
+    enable_drop_to_shelf();
+    enable_drop_to_trash();
+    enable_drop_to_box1();
+    enable_drop_to_box2();
+    enable_drop_to_box1();
+    populate_shelf();
+    populate_machine();
+    create_challenge();
+    style_shelf();
+    style_boxes();
+    style_trash();
+}
+
 /*
 
 The main point of this code is to demonstrate drag&drop, so most of the drag/drop
@@ -354,14 +368,4 @@ function create_challenge() {
     document.querySelector("#target_answer").append(answer);
 }
 
-style_shelf();
-style_boxes();
-style_trash();
-populate_shelf();
-populate_machine();
-enable_drop_to_shelf();
-enable_drop_to_box1();
-enable_drop_to_box2();
-enable_drop_to_trash();
-enable_drop_to_box1();
-create_challenge();
+build_application();
