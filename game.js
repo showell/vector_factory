@@ -37,7 +37,7 @@ function populate_shelf() {
 
 
     add([
-        [5, 7],
+        [5, 27],
         [3, -1],
     ]);
 }
