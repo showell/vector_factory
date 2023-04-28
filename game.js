@@ -74,9 +74,8 @@ function enable_drop_to_shelf() {
     }
 
     function drop() {
-        shelf.append(dragged_elem);
+        append_to_shelf(dragged_elem);
         do_matrix_multiply();
-        dragged_elem.matrix_info.loc = "shelf";
     }
 
     shelf.addEventListener("dragover", dragover);
@@ -139,6 +138,42 @@ END OF DRAG/DROP
 
 */
 
+function box(n) {
+    return document.querySelector(`#machine_box${n}`);
+}
+
+function shelf() {
+    return document.querySelector("#shelf");
+}
+
+function box_matrix(n) {
+    const div = document.querySelector(`#machine_box${n} .matrix-div`);
+
+    if (!div) {
+        return undefined;
+    }
+
+    return div.matrix_info.matrix;
+}
+
+function append_to_shelf(elem) {
+    elem.matrix_info.loc = "shelf";
+    shelf().append(elem);
+}
+
+function append_to_box1(elem) {
+    elem.matrix_info.loc = "box1";
+    box(1).append(elem);
+    do_matrix_multiply();
+}
+
+function append_to_box2(elem) {
+    elem.matrix_info.loc = "box2";
+    box(2).append(elem);
+    do_matrix_multiply();
+}
+
+
 let matrix = globalThis.APP.matrix;
 let in_progress = false;
 
@@ -158,12 +193,9 @@ function create_challenge() {
 }
 
 function populate_shelf() {
-    const shelf = document.querySelector("#shelf");
-
     function add(matrix) {
         const elem = make_matrix_elem(matrix);
-        shelf.append(elem);
-        elem.matrix_info.loc = "shelf";
+        append_to_shelf(elem);
     }
 
     const swapper = [
@@ -241,32 +273,6 @@ function make_matrix_elem(matrix) {
     allow_dragging_of_matrix(div);
 
     return div;
-}
-
-function box_matrix(n) {
-    const div = document.querySelector(`#machine_box${n} .matrix-div`);
-
-    if (!div) {
-        return undefined;
-    }
-
-    return div.matrix_info.matrix;
-}
-
-function box(n) {
-    return document.querySelector(`#machine_box${n}`);
-}
-
-function append_to_box1(elem) {
-    elem.matrix_info.loc = "box1";
-    box(1).append(elem);
-    do_matrix_multiply();
-}
-
-function append_to_box2(elem) {
-    elem.matrix_info.loc = "box2";
-    box(2).append(elem);
-    do_matrix_multiply();
 }
 
 function do_matrix_multiply() {
