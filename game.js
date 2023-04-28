@@ -145,9 +145,14 @@ const winner = matrix.from_vector([7, 0]);
 function congratulate() {
     const p = document.createElement("p");
     p.innerText = "DAMN you are smart!";
-    p.style.fontSize = "120%";
-    p.style.color = "green";
+    style_congratuations(p);
+
     document.querySelector("#message_area").replaceChildren(p);
+}
+
+function create_challenge() {
+    const answer = make_matrix_table(winner);
+    document.querySelector("#target_answer").append(answer);
 }
 
 function populate_shelf() {
@@ -281,19 +286,16 @@ function do_matrix_multiply() {
 }
 
 function animate_machine_generation(elem) {
-    const orig_color = box(1).style.background;
 
     function start() {
         in_progress = true;
-        box(1).style.background = "cyan";
-        box(2).style.background = "cyan";
+        style_machine_running();
     }
 
     function finish() {
         box(3).append(elem);
         elem.matrix_info.loc = "box3";
-        box(1).style.background = orig_color;
-        box(2).style.background = orig_color;
+        style_machine_idle();
         in_progress = false;
     }
 
@@ -363,9 +365,19 @@ function style_boxes() {
     }
 }
 
-function create_challenge() {
-    const answer = make_matrix_table(winner);
-    document.querySelector("#target_answer").append(answer);
+function style_congratuations(p) {
+    p.style.fontSize = "120%";
+    p.style.color = "green";
+}
+
+function style_machine_running() {
+    box(1).style.background = "cyan";
+    box(2).style.background = "cyan";
+}
+
+function style_machine_idle() {
+    box(1).style.background = "white";
+    box(2).style.background = "white";
 }
 
 build_application();
