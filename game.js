@@ -153,6 +153,7 @@ function make_matrix_table(matrix) {
     table.style.borderRight = "1px solid black";
     table.style.background = "aliceblue";
     table.style.padding = "5px";
+    table.style.textAlign = "right";
 
     function row(row_vector) {
         const tr = document.createElement("tr");
