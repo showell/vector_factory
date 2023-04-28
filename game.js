@@ -244,7 +244,7 @@ function make_matrix_elem(matrix) {
 }
 
 function box_matrix(n) {
-    const div = document.querySelector(`#machine_box${n} .matrix`);
+    const div = document.querySelector(`#machine_box${n} .matrix-div`);
 
     if (!div) {
         return undefined;
@@ -359,17 +359,21 @@ function style_shelf() {
 
 function style_trash() {
     const elem = document.getElementById("trash");
-    elem.style.border = "1px solid red";
-    elem.style.height = "60px";
-    elem.style.width = "60px";
-    elem.style.marginLeft = "70px";
+    setStyles(elem, {
+        border: "1px solid red",
+        height: "60px",
+        width: "60px",
+        marginLeft: "70px",
+    });
 }
 
 function style_machine() {
     const wb = document.querySelector("#machine");
-    wb.style.display = "flex";
-    wb.style.flexDirection = "row";
-    wb.style.marginBottom = "10px";
+    setStyles(wb, {
+        display: "flex",
+        flexDirection: "row",
+        marginBottom: "10px",
+    });
 }
 
 function style_machine_box(box) {
