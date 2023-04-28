@@ -8,6 +8,7 @@ function build_application() {
     populate_machine();
     create_challenge();
     style_shelf();
+    style_machine();
     style_boxes();
     style_trash();
 }
@@ -199,11 +200,9 @@ function animate_trashing(elem) {
 
 function make_matrix_table(matrix) {
     const table = document.createElement("table");
-    table.style.borderLeft = "1px solid black";
-    table.style.borderRight = "1px solid black";
-    table.style.background = "aliceblue";
-    table.style.padding = "5px";
-    table.style.textAlign = "right";
+    table.className = "matrix-table";
+
+    style_matrix_table(table);
 
     function row(row_vector) {
         const tr = document.createElement("tr");
@@ -227,11 +226,12 @@ function make_matrix_table(matrix) {
 }
 
 function make_matrix_elem(matrix) {
-    const div = document.createElement("div");
     const table = make_matrix_table(matrix);
+
+    const div = document.createElement("div");
+    div.className = "matrix-div";
     div.append(table);
-    div.style.display = "inline-block";
-    div.className = "matrix";
+    style_matrix_div(div);
 
     div.matrix_info = {
         matrix: matrix,
@@ -314,6 +314,12 @@ function populate_machine() {
     append_to_box2(make_matrix_elem(m_01));
 }
 
+/*
+
+STYLES
+
+*/
+
 function style_shelf() {
     const elem = document.getElementById("shelf");
     elem.style.border = "1px solid blue";
@@ -341,12 +347,14 @@ function style_machine_box(box) {
     box.style.padding = "7px";
 }
 
-function style_boxes() {
+function style_machine() {
     const wb = document.querySelector("#machine");
     wb.style.display = "flex";
     wb.style.flexDirection = "row";
     wb.style.marginBottom = "10px";
+}
 
+function style_boxes() {
     {
         const elem = box(1);
         style_machine_box(elem);
@@ -378,6 +386,18 @@ function style_machine_running() {
 function style_machine_idle() {
     box(1).style.background = "white";
     box(2).style.background = "white";
+}
+
+function style_matrix_table(table) {
+    table.style.borderLeft = "1px solid black";
+    table.style.borderRight = "1px solid black";
+    table.style.background = "aliceblue";
+    table.style.padding = "5px";
+    table.style.textAlign = "right";
+}
+
+function style_matrix_div(div) {
+    div.style.display = "inline-block";
 }
 
 build_application();
