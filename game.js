@@ -3,11 +3,15 @@ let matrix = globalThis.APP.matrix;
 let dragged_elem;
 let in_progress = false;
 
+function is_dragged_from(loc) {
+    return dragged_elem.matrix_info.loc == loc;
+}
+
 function enable_shelf() {
     const shelf = document.querySelector("#shelf");
 
     function dragover(e) {
-        if (dragged_elem.matrix_info.loc == "shelf") {
+        if (is_dragged_from("shelf")) {
             return;
         }
         e.preventDefault();
@@ -15,9 +19,7 @@ function enable_shelf() {
 
     function drop() {
         shelf.append(dragged_elem);
-        if (dragged_elem.matrix_info.loc == "box3") {
-            do_matrix_multiply();
-        }
+        do_matrix_multiply();
         dragged_elem.matrix_info.loc = "shelf";
     }
 
@@ -25,12 +27,31 @@ function enable_shelf() {
     shelf.addEventListener("drop", drop);
 }
 
-function enable_box2() {
+function enable_box1() {
     function dragover(e) {
-        if (box_matrix(2) || dragged_elem.matrix_info.loc == "box2") {
+        if (box_matrix(1) || is_dragged_from("box1")) {
             return;
         }
-        if (box_matrix(3) && dragged_elem.matrix_info.loc != "box3") {
+        if (box_matrix(2) && box_matrix(3) && is_dragged_from("shelf")) {
+            return;
+        }
+        e.preventDefault();
+    }
+
+    function drop() {
+        append_to_box1(dragged_elem);
+    }
+
+    box(1).addEventListener("dragover", dragover);
+    box(1).addEventListener("drop", drop);
+}
+
+function enable_box2() {
+    function dragover(e) {
+        if (box_matrix(2) || is_dragged_from("box2")) {
+            return;
+        }
+        if (box_matrix(1) && box_matrix(3) && is_dragged_from("shelf")) {
             return;
         }
         e.preventDefault();
@@ -132,7 +153,6 @@ function do_matrix_multiply() {
         const C = matrix.multiply(A, B);
 
         const elem = make_matrix_elem(C);
-        elem.matrix_info.loc = "box3";
         animate_machine_generation(elem);
     }
 }
@@ -148,6 +168,7 @@ function animate_machine_generation(elem) {
 
     function finish() {
         box(3).append(elem);
+        elem.matrix_info.loc = "box3";
         box(1).style.background = orig_color;
         box(2).style.background = orig_color;
         in_progress = false;
@@ -213,4 +234,5 @@ style_shelf();
 style_workbench();
 populate();
 enable_shelf();
+enable_box1();
 enable_box2();
