@@ -17,6 +17,7 @@ function dragged_matrix() {
 
 function allow_dragging_of_matrix(div) {
     div.draggable = true;
+    div.userSelect = undefined;
 
     function dragstart(e) {
         dragged_elem = e.target;
