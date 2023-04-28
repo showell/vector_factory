@@ -373,49 +373,42 @@ function style_machine() {
         display: "flex",
         flexDirection: "row",
         marginBottom: "10px",
+        marginLeft: "70px",
     });
 }
 
 function style_machine_box(box) {
-    box.style.border = "1px solid green";
-    box.style.height = "60px";
-    box.style.minWidth = "60px";
-    box.style.textAlign = "center";
-    box.style.padding = "7px";
+    setStyles(box, {
+        border: "1px solid green",
+        height: "60px",
+        minWidth: "60px",
+        textAlign: "center",
+        padding: "7px",
+    });
 }
 
 function style_boxes() {
-    {
-        const elem = box(1);
-        style_machine_box(elem);
-        elem.style.marginLeft = "70px";
-    }
-
-    {
-        const elem = box(2);
-        style_machine_box(elem);
-    }
-
-    {
-        const elem = box(3);
-        style_machine_box(elem);
-        elem.style.background = "lightgreen";
-    }
+    style_machine_box(box(1));
+    style_machine_box(box(2));
+    style_machine_box(box(3));
+    setStyles(box(3), {background: "lightgreen"});
 }
 
 function style_congratuations(p) {
-    p.style.fontSize = "120%";
-    p.style.color = "green";
+    setStyles(p, {
+        fontSize: "120%",
+        color: "green",
+    });
 }
 
 function style_machine_running() {
-    box(1).style.background = "cyan";
-    box(2).style.background = "cyan";
+    setStyles(box(1), {background: "cyan"});
+    setStyles(box(2), {background: "cyan"});
 }
 
 function style_machine_idle() {
-    box(1).style.background = "white";
-    box(2).style.background = "white";
+    setStyles(box(1), {background: "none"});
+    setStyles(box(2), {background: "none"});
 }
 
 function style_matrix_table(table) {
@@ -429,7 +422,7 @@ function style_matrix_table(table) {
 }
 
 function style_matrix_div(div) {
-    div.style.display = "inline-block";
+    setStyles(div, {display: "inline-block"});
 }
 
 build_application();
