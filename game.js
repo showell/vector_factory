@@ -361,7 +361,7 @@ function setStyles(elem, styles) {
         elem.style[f] = v;
     }
 
-    console.info(info.join("\n"));
+    console.trace(info.join("\n"));
 }
 
 /*
