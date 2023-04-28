@@ -391,7 +391,7 @@ function style_boxes() {
     style_machine_box(box(1));
     style_machine_box(box(2));
     style_machine_box(box(3));
-    setStyles(box(3), {background: "lightgreen"});
+    setStyles(box(3), { background: "lightgreen" });
 }
 
 function style_congratuations(p) {
@@ -402,13 +402,13 @@ function style_congratuations(p) {
 }
 
 function style_machine_running() {
-    setStyles(box(1), {background: "cyan"});
-    setStyles(box(2), {background: "cyan"});
+    setStyles(box(1), { background: "cyan" });
+    setStyles(box(2), { background: "cyan" });
 }
 
 function style_machine_idle() {
-    setStyles(box(1), {background: "none"});
-    setStyles(box(2), {background: "none"});
+    setStyles(box(1), { background: "none" });
+    setStyles(box(2), { background: "none" });
 }
 
 function style_matrix_table(table) {
@@ -422,7 +422,7 @@ function style_matrix_table(table) {
 }
 
 function style_matrix_div(div) {
-    setStyles(div, {display: "inline-block"});
+    setStyles(div, { display: "inline-block" });
 }
 
 build_application();
