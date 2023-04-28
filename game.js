@@ -1,6 +1,115 @@
-let matrix = globalThis.APP.matrix;
+/*
+
+The main point of this code is to demonstrate drag&drop, so most of the drag/drop
+code is at the top of the file.  It is a bit difficult to extract this code out
+into a module for a couple reasons.
+*/
+
 
 let dragged_elem;
+
+function is_dragged_from(loc) {
+    return dragged_elem.matrix_info.loc == loc;
+}
+
+function dragged_matrix() {
+    return dragged_elem.matrix_info.matrix;
+}
+
+function enable_drop_to_trash() {
+    const trash = document.querySelector("#trash");
+
+    function dragover(e) {
+        e.preventDefault();
+    }
+
+    function drop() {
+        animate_trashing(dragged_elem);
+        do_matrix_multiply();
+    }
+
+    trash.addEventListener("dragover", dragover);
+    trash.addEventListener("drop", drop);
+}
+
+function enable_drop_to_shelf() {
+    const shelf = document.querySelector("#shelf");
+
+    function dragover(e) {
+        if (is_dragged_from("shelf")) {
+            return;
+        }
+        e.preventDefault();
+    }
+
+    function drop() {
+        shelf.append(dragged_elem);
+        do_matrix_multiply();
+        dragged_elem.matrix_info.loc = "shelf";
+    }
+
+    shelf.addEventListener("dragover", dragover);
+    shelf.addEventListener("drop", drop);
+}
+
+function enable_drop_to_box1() {
+    function dragover(e) {
+        if (box_matrix(1) || is_dragged_from("box1")) {
+            return;
+        }
+        if (box_matrix(2) && !is_dragged_from("box2")) {
+            if (box_matrix(3) && is_dragged_from("shelf")) {
+                return;
+            }
+            if (!matrix.allow_multiply(dragged_matrix(), box_matrix(2))) {
+                return;
+            }
+        }
+        e.preventDefault();
+    }
+
+    function drop() {
+        append_to_box1(dragged_elem);
+    }
+
+    box(1).addEventListener("dragover", dragover);
+    box(1).addEventListener("drop", drop);
+}
+
+function enable_drop_to_box2() {
+    function dragover(e) {
+        if (box_matrix(2) || is_dragged_from("box2")) {
+            return;
+        }
+        if (box_matrix(1) && !is_dragged_from("box1")) {
+            if (box_matrix(3) && is_dragged_from("shelf")) {
+                return;
+            }
+            if (!matrix.allow_multiply(box_matrix(1), dragged_matrix())) {
+                return;
+            }
+        }
+        e.preventDefault();
+    }
+
+    function drop() {
+        append_to_box2(dragged_elem);
+    }
+
+    box(2).addEventListener("dragover", dragover);
+    box(2).addEventListener("drop", drop);
+}
+
+
+/*
+
+END OF DRAG/DROP
+
+-----------------------------------------------------------
+
+*/
+
+let matrix = globalThis.APP.matrix;
 let in_progress = false;
 
 const winner = matrix.from_vector([7, 0]);
@@ -11,14 +120,6 @@ function congratulate() {
     p.style.fontSize = "120%";
     p.style.color = "green";
     document.querySelector("#message_area").replaceChildren(p);
-}
-
-function is_dragged_from(loc) {
-    return dragged_elem.matrix_info.loc == loc;
-}
-
-function dragged_matrix() {
-    return dragged_elem.matrix_info.matrix;
 }
 
 function populate_shelf() {
@@ -61,90 +162,6 @@ function animate_trashing(elem) {
     setTimeout(() => {
         elem.remove();
     }, 800);
-}
-
-function enable_trash() {
-    const trash = document.querySelector("#trash");
-
-    function dragover(e) {
-        e.preventDefault();
-    }
-
-    function drop() {
-        animate_trashing(dragged_elem);
-        do_matrix_multiply();
-    }
-
-    trash.addEventListener("dragover", dragover);
-    trash.addEventListener("drop", drop);
-}
-
-function enable_shelf() {
-    const shelf = document.querySelector("#shelf");
-
-    function dragover(e) {
-        if (is_dragged_from("shelf")) {
-            return;
-        }
-        e.preventDefault();
-    }
-
-    function drop() {
-        shelf.append(dragged_elem);
-        do_matrix_multiply();
-        dragged_elem.matrix_info.loc = "shelf";
-    }
-
-    shelf.addEventListener("dragover", dragover);
-    shelf.addEventListener("drop", drop);
-}
-
-function enable_box1() {
-    function dragover(e) {
-        if (box_matrix(1) || is_dragged_from("box1")) {
-            return;
-        }
-        if (box_matrix(2) && !is_dragged_from("box2")) {
-            if (box_matrix(3) && is_dragged_from("shelf")) {
-                return;
-            }
-            if (!matrix.allow_multiply(dragged_matrix(), box_matrix(2))) {
-                return;
-            }
-        }
-        e.preventDefault();
-    }
-
-    function drop() {
-        append_to_box1(dragged_elem);
-    }
-
-    box(1).addEventListener("dragover", dragover);
-    box(1).addEventListener("drop", drop);
-}
-
-function enable_box2() {
-    function dragover(e) {
-        if (box_matrix(2) || is_dragged_from("box2")) {
-            return;
-        }
-        if (box_matrix(1) && !is_dragged_from("box1")) {
-            if (box_matrix(3) && is_dragged_from("shelf")) {
-                return;
-            }
-            if (!matrix.allow_multiply(box_matrix(1), dragged_matrix())) {
-                return;
-            }
-        }
-        e.preventDefault();
-    }
-
-    function drop() {
-        append_to_box2(dragged_elem);
-    }
-
-    box(2).addEventListener("dragover", dragover);
-    box(2).addEventListener("drop", drop);
 }
 
 function make_matrix_table(matrix) {
@@ -336,9 +353,9 @@ style_workbench();
 style_trash();
 populate_shelf();
 populate_machine();
-enable_shelf();
-enable_box1();
-enable_box2();
-enable_trash();
-enable_box1();
+enable_drop_to_shelf();
+enable_drop_to_box1();
+enable_drop_to_box2();
+enable_drop_to_trash();
+enable_drop_to_box1();
 create_challenge();
