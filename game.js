@@ -288,6 +288,11 @@ function style_workbench() {
     }
 }
 
+function create_challenge() {
+    const answer = make_matrix_table(matrix.from_vector([7, 0]));
+    document.querySelector("#target_answer").append(answer);
+}
+
 style_shelf();
 style_workbench();
 style_trash();
@@ -298,3 +303,4 @@ enable_box1();
 enable_box2();
 enable_trash();
 enable_box1();
+create_challenge();
