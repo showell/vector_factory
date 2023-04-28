@@ -271,9 +271,11 @@ function style_shelf() {
     const elem = document.getElementById("shelf");
     elem.style.border = "1px solid blue";
     elem.style.height = "60px";
+    elem.style.width = "600px";
     elem.style.display = "flex";
     elem.style.flexDirection = "row";
     elem.style.marginBottom = "30px";
+    elem.style.marginLeft = "20px";
 }
 
 function style_trash() {
@@ -281,6 +283,7 @@ function style_trash() {
     elem.style.border = "1px solid red";
     elem.style.height = "60px";
     elem.style.width = "60px";
+    elem.style.marginLeft = "70px";
 }
 
 function style_machine_container(c) {
@@ -292,7 +295,7 @@ function style_machine_container(c) {
 }
 
 function style_workbench() {
-    const wb = document.querySelector("#workbench");
+    const wb = document.querySelector("#machine");
     wb.style.display = "flex";
     wb.style.flexDirection = "row";
     wb.style.marginBottom = "10px";
@@ -300,12 +303,11 @@ function style_workbench() {
     {
         const elem = wb.querySelector("#machine_box1");
         style_machine_container(elem);
-        elem.style.marginRight = "10px";
+        elem.style.marginLeft = "70px";
     }
 
     {
         const elem = wb.querySelector("#machine_box2");
-        elem.style.marginRight = "40px";
         style_machine_container(elem);
     }
 
