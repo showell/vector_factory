@@ -55,20 +55,29 @@ function populate_shelf() {
     ]);
 }
 
+function animate_trashing(elem) {
+    const trash = document.querySelector("#trash");
+    trash.append(elem);
+
+    setTimeout(() => {
+        elem.remove();
+    }, 800);
+}
+
 function enable_trash() {
-    const shelf = document.querySelector("#trash");
+    const trash = document.querySelector("#trash");
 
     function dragover(e) {
         e.preventDefault();
     }
 
     function drop() {
-        dragged_elem.remove();
+        animate_trashing(dragged_elem);
         do_matrix_multiply();
     }
 
-    shelf.addEventListener("dragover", dragover);
-    shelf.addEventListener("drop", drop);
+    trash.addEventListener("dragover", dragover);
+    trash.addEventListener("drop", drop);
 }
 
 function enable_shelf() {
