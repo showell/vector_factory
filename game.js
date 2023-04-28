@@ -3,6 +3,8 @@ let matrix = globalThis.APP.matrix;
 let dragged_elem;
 let in_progress = false;
 
+const winning_vector = [7, 0];
+
 function is_dragged_from(loc) {
     return dragged_elem.matrix_info.loc == loc;
 }
@@ -289,7 +291,7 @@ function style_workbench() {
 }
 
 function create_challenge() {
-    const answer = make_matrix_table(matrix.from_vector([7, 0]));
+    const answer = make_matrix_table(matrix.from_vector(winning_vector));
     document.querySelector("#target_answer").append(answer);
 }
 
