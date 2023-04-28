@@ -48,7 +48,6 @@ function populate_shelf() {
     ];
     add(slicer);
 
-
     add([
         [5, 27],
         [3, -1],
