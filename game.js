@@ -287,7 +287,6 @@ function do_matrix_multiply() {
 }
 
 function animate_machine_generation(elem) {
-
     function start() {
         in_progress = true;
         style_machine_running();
@@ -323,7 +322,11 @@ STYLES
 
 function setStyles(elem, styles) {
     const info = [];
-    const label = elem.id ? `#${elem.id}` :  elem.className ? `.${elem.className}` : elem.tagName;
+    const label = elem.id
+        ? `#${elem.id}`
+        : elem.className
+        ? `.${elem.className}`
+        : elem.tagName;
 
     info.push(`\nSetting styles for ${label}\n`);
 
