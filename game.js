@@ -15,6 +15,21 @@ function dragged_matrix() {
     return dragged_elem.matrix_info.matrix;
 }
 
+function allow_dragging_of_matrix(div) {
+    div.draggable = true;
+
+    function dragstart(e) {
+        dragged_elem = e.target;
+    }
+
+    function dragend() {
+        dragged_elem = undefined;
+    }
+
+    div.addEventListener("dragstart", dragstart);
+    div.addEventListener("dragend", dragend);
+}
+
 function enable_drop_to_trash() {
     const trash = document.querySelector("#trash");
 
@@ -195,24 +210,15 @@ function make_matrix_elem(matrix) {
     const div = document.createElement("div");
     const table = make_matrix_table(matrix);
     div.append(table);
-    div.draggable = true;
     div.style.display = "inline-block";
     div.className = "matrix";
-
-    function dragstart(e) {
-        dragged_elem = e.target;
-    }
-
-    function dragend() {
-        dragged_elem = undefined;
-    }
-
-    div.addEventListener("dragstart", dragstart);
-    div.addEventListener("dragend", dragend);
 
     div.matrix_info = {
         matrix: matrix,
     };
+
+    allow_dragging_of_matrix(div);
+
     return div;
 }
 
@@ -310,34 +316,35 @@ function style_trash() {
     elem.style.marginLeft = "70px";
 }
 
-function style_machine_container(c) {
-    c.style.border = "1px solid green";
-    c.style.height = "60px";
-    c.style.minWidth = "60px";
-    c.style.textAlign = "center";
-    c.style.padding = "7px";
+function style_machine_box(box) {
+    box.style.border = "1px solid green";
+    box.style.height = "60px";
+    box.style.minWidth = "60px";
+    box.style.textAlign = "center";
+    box.style.padding = "7px";
 }
 
-function style_workbench() {
+function style_boxes() {
     const wb = document.querySelector("#machine");
     wb.style.display = "flex";
     wb.style.flexDirection = "row";
     wb.style.marginBottom = "10px";
 
     {
-        const elem = wb.querySelector("#machine_box1");
-        style_machine_container(elem);
+        const elem = box(1);
+        style_machine_box(elem);
         elem.style.marginLeft = "70px";
     }
 
     {
-        const elem = wb.querySelector("#machine_box2");
-        style_machine_container(elem);
+        const elem = box(2);
+        style_machine_box(elem);
     }
 
     {
-        const elem = wb.querySelector("#machine_box3");
-        style_machine_container(elem);
+        const elem = box(3);
+        style_machine_box(elem);
+        elem.style.background = "lightgreen";
     }
 }
 
@@ -347,7 +354,7 @@ function create_challenge() {
 }
 
 style_shelf();
-style_workbench();
+style_boxes();
 style_trash();
 populate_shelf();
 populate_machine();
