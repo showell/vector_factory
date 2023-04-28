@@ -5,7 +5,6 @@ code is at the top of the file.  It is a bit difficult to extract this code out
 into a module for a couple reasons.
 */
 
-
 let dragged_elem;
 
 function is_dragged_from(loc) {
@@ -99,7 +98,6 @@ function enable_drop_to_box2() {
     box(2).addEventListener("dragover", dragover);
     box(2).addEventListener("drop", drop);
 }
-
 
 /*
 
