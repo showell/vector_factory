@@ -3,7 +3,15 @@ let matrix = globalThis.APP.matrix;
 let dragged_elem;
 let in_progress = false;
 
-const winning_vector = [7, 0];
+const winner = matrix.from_vector([7, 0]);
+
+function congratulate() {
+    const p = document.createElement("p");
+    p.innerText = "DAMN you are smart!";
+    p.style.fontSize = "120%";
+    p.style.color = "green";
+    document.querySelector("#message_area").replaceChildren(p);
+}
 
 function is_dragged_from(loc) {
     return dragged_elem.matrix_info.loc == loc;
@@ -218,6 +226,10 @@ function do_matrix_multiply() {
     if (A && B && !C && !in_progress) {
         const C = matrix.multiply(A, B);
 
+        if (matrix.eq(C, winner)) {
+            congratulate();
+        }
+
         const elem = make_matrix_elem(C);
         animate_machine_generation(elem);
     }
@@ -304,7 +316,7 @@ function style_workbench() {
 }
 
 function create_challenge() {
-    const answer = make_matrix_table(matrix.from_vector(winning_vector));
+    const answer = make_matrix_table(winner);
     document.querySelector("#target_answer").append(answer);
 }
 

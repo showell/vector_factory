@@ -6,6 +6,20 @@ function dot_product(v1, v2) {
     return result;
 }
 
+function eq_vector(v1, v2) {
+    if (v1.length != v2.length) {
+        return false;
+    }
+
+    for (let i = 0; i < v1.length; ++i) {
+        if (v1[i] != v2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 {
     let matrix = {};
 
@@ -23,6 +37,20 @@ function dot_product(v1, v2) {
         }
 
         return result;
+    };
+
+    matrix.eq = (A_rows, B_rows) => {
+        if (A_rows.length != B_rows.length) {
+            return false;
+        }
+
+        for (let r = 0; r < A_rows.length; ++r) {
+            if (!eq_vector(A_rows[r], B_rows[r])) {
+                return false;
+            }
+        }
+
+        return true;
     };
 
     matrix.allow_multiply = (A_rows, B_rows) => {
