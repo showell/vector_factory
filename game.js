@@ -385,7 +385,7 @@ function style_shelf() {
         display: "flex",
         flexDirection: "row",
         marginBottom: "30px",
-        marginLeft: "20px",
+        marginLeft: "30px",
     });
 }
 
@@ -395,7 +395,8 @@ function style_trash() {
         border: "1px solid red",
         height: "60px",
         width: "60px",
-        marginLeft: "70px",
+        marginLeft: "30px",
+        background: "burlywood",
     });
 }
 
@@ -405,7 +406,9 @@ function style_machine() {
         display: "flex",
         flexDirection: "row",
         marginBottom: "10px",
-        marginLeft: "70px",
+        marginLeft: "30px",
+        borderBottom: "1px solid blue",
+        width: "max-content",
     });
 }
 
@@ -416,6 +419,7 @@ function style_machine_box(box) {
         minWidth: "60px",
         textAlign: "center",
         padding: "7px",
+        margin: "4px",
     });
 }
 
@@ -454,7 +458,10 @@ function style_matrix_table(table) {
 }
 
 function style_matrix_div(div) {
-    setStyles(div, { display: "inline-block" });
+    setStyles(div, {
+        display: "inline-block",
+        margin: "2px",
+    });
 }
 
 build_application();
