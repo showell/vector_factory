@@ -7,6 +7,7 @@ function is_dragged_from(loc) {
     return dragged_elem.matrix_info.loc == loc;
 }
 
+
 function populate_shelf() {
     const shelf = document.querySelector("#shelf");
 
@@ -20,8 +21,25 @@ function populate_shelf() {
         [0, 1],
         [1, 0],
     ];
-
     add(swapper);
+
+    const q_inverse = [
+        [-1, 1],
+        [1, 0],
+    ];
+    add(q_inverse);
+
+    const slicer = [
+        [0, 0],
+        [1, 0],
+    ];
+    add(slicer);
+
+
+    add([
+        [5, 7],
+        [3, -1],
+    ]);
 }
 
 function enable_trash() {
