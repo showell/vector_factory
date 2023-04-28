@@ -7,6 +7,39 @@ function is_dragged_from(loc) {
     return dragged_elem.matrix_info.loc == loc;
 }
 
+function populate_shelf() {
+    const shelf = document.querySelector("#shelf");
+
+    function add(matrix) {
+        const elem = make_matrix_elem(matrix);
+        shelf.append(elem);
+        elem.matrix_info.loc = "shelf";
+    }
+
+    const swapper = [
+        [0, 1],
+        [1, 0],
+    ];
+
+    add(swapper);
+}
+
+function enable_trash() {
+    const shelf = document.querySelector("#trash");
+
+    function dragover(e) {
+        e.preventDefault();
+    }
+
+    function drop() {
+        dragged_elem.remove();
+        do_matrix_multiply();
+    }
+
+    shelf.addEventListener("dragover", dragover);
+    shelf.addEventListener("drop", drop);
+}
+
 function enable_shelf() {
     const shelf = document.querySelector("#shelf");
 
@@ -178,7 +211,7 @@ function animate_machine_generation(elem) {
     setTimeout(finish, 500);
 }
 
-function populate() {
+function populate_machine() {
     const q_matrix = [
         [0, 1],
         [1, 1],
@@ -196,6 +229,13 @@ function style_shelf() {
     elem.style.display = "flex";
     elem.style.flexDirection = "row";
     elem.style.marginBottom = "30px";
+}
+
+function style_trash() {
+    const elem = document.getElementById("trash");
+    elem.style.border = "1px solid red";
+    elem.style.height = "60px";
+    elem.style.width = "60px";
 }
 
 function style_machine_container(c) {
@@ -232,7 +272,11 @@ function style_workbench() {
 
 style_shelf();
 style_workbench();
-populate();
+style_trash();
+populate_shelf();
+populate_machine();
 enable_shelf();
 enable_box1();
 enable_box2();
+enable_trash();
+enable_box1();
