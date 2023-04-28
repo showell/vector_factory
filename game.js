@@ -120,7 +120,7 @@ function enable_box2() {
         if (box_matrix(2) || is_dragged_from("box2")) {
             return;
         }
-        if (box_matrix(1) && !is_dragged_from("box2")) {
+        if (box_matrix(1) && !is_dragged_from("box1")) {
             if (box_matrix(3) && is_dragged_from("shelf")) {
                 return;
             }
