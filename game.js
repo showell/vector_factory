@@ -7,6 +7,7 @@ function build_application() {
     populate_shelf();
     populate_machine();
     create_challenge();
+    style_body();
     style_shelf();
     style_machine();
     style_boxes();
@@ -319,6 +320,10 @@ function populate_machine() {
 STYLES
 
 */
+
+function style_body() {
+    document.body.style.marginLeft = "40px";
+}
 
 function style_shelf() {
     const elem = document.getElementById("shelf");
