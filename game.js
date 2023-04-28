@@ -1,17 +1,17 @@
 function build_application() {
-    enable_drop_to_shelf();
-    enable_drop_to_trash();
-    enable_drop_to_box1();
-    enable_drop_to_box2();
-    enable_drop_to_box1();
-    populate_shelf();
-    populate_machine();
-    create_challenge();
     style_body();
     style_shelf();
     style_machine();
     style_boxes();
     style_trash();
+    enable_drop_to_shelf();
+    enable_drop_to_trash();
+    enable_drop_to_box1();
+    enable_drop_to_box2();
+    enable_drop_to_box1();
+    create_challenge();
+    populate_shelf();
+    populate_machine();
 }
 
 /*
@@ -321,19 +321,37 @@ STYLES
 
 */
 
+function setStyles(elem, styles) {
+    const info = [];
+    const label = elem.id ? `#${elem.id}` :  elem.className ? `.${elem.className}` : elem.tagName;
+
+    info.push(`\nSetting styles for ${label}\n`);
+
+    for (const [f, v] of Object.entries(styles)) {
+        info.push(`  ${f}: ${v};`);
+        elem.style[f] = v;
+    }
+
+    console.trace(info.join("\n"));
+}
+
 function style_body() {
-    document.body.style.marginLeft = "40px";
+    setStyles(document.body, {
+        marginLeft: "40px",
+    });
 }
 
 function style_shelf() {
     const elem = document.getElementById("shelf");
-    elem.style.border = "1px solid blue";
-    elem.style.height = "60px";
-    elem.style.width = "600px";
-    elem.style.display = "flex";
-    elem.style.flexDirection = "row";
-    elem.style.marginBottom = "30px";
-    elem.style.marginLeft = "20px";
+    setStyles(elem, {
+        border: "1px solid blue",
+        height: "60px",
+        width: "600px",
+        display: "flex",
+        flexDirection: "row",
+        marginBottom: "30px",
+        marginLeft: "20px",
+    });
 }
 
 function style_trash() {
@@ -344,19 +362,19 @@ function style_trash() {
     elem.style.marginLeft = "70px";
 }
 
+function style_machine() {
+    const wb = document.querySelector("#machine");
+    wb.style.display = "flex";
+    wb.style.flexDirection = "row";
+    wb.style.marginBottom = "10px";
+}
+
 function style_machine_box(box) {
     box.style.border = "1px solid green";
     box.style.height = "60px";
     box.style.minWidth = "60px";
     box.style.textAlign = "center";
     box.style.padding = "7px";
-}
-
-function style_machine() {
-    const wb = document.querySelector("#machine");
-    wb.style.display = "flex";
-    wb.style.flexDirection = "row";
-    wb.style.marginBottom = "10px";
 }
 
 function style_boxes() {
@@ -394,11 +412,13 @@ function style_machine_idle() {
 }
 
 function style_matrix_table(table) {
-    table.style.borderLeft = "1px solid black";
-    table.style.borderRight = "1px solid black";
-    table.style.background = "aliceblue";
-    table.style.padding = "5px";
-    table.style.textAlign = "right";
+    setStyles(table, {
+        borderLeft: "1px solid black",
+        borderRight: "1px solid black",
+        background: "aliceblue",
+        padding: "5px",
+        textAlign: "right",
+    });
 }
 
 function style_matrix_div(div) {
