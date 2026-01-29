@@ -144,7 +144,7 @@ class Shelf {
     }
 
     handle_drop() {
-        append_to_shelf(GAME.dragged_physical_matrix().dom());
+        append_to_shelf(GAME.dragged_physical_matrix());
         do_matrix_multiply();
     }
 
@@ -178,7 +178,7 @@ function enable_drop_to_box1() {
     }
 
     function drop() {
-        append_to_box1(GAME.dragged_physical_matrix().dom());
+        append_to_box1(GAME.dragged_physical_matrix());
     }
 
     box(1).addEventListener("dragover", dragover);
@@ -202,7 +202,7 @@ function enable_drop_to_box2() {
     }
 
     function drop() {
-        append_to_box2(GAME.dragged_physical_matrix().dom());
+        append_to_box2(GAME.dragged_physical_matrix());
     }
 
     box(2).addEventListener("dragover", dragover);
@@ -235,18 +235,21 @@ function box_matrix(n) {
     return div.matrix_info.matrix;
 }
 
-function append_to_shelf(elem) {
+function append_to_shelf(physical_matrix) {
+    const elem = physical_matrix.dom();
     elem.matrix_info.loc = "shelf";
     shelf().append(elem);
 }
 
-function append_to_box1(elem) {
+function append_to_box1(physical_matrix) {
+    const elem = physical_matrix.dom();
     elem.matrix_info.loc = "box1";
     box(1).append(elem);
     do_matrix_multiply();
 }
 
-function append_to_box2(elem) {
+function append_to_box2(physical_matrix) {
+    const elem = physical_matrix.dom();
     elem.matrix_info.loc = "box2";
     box(2).append(elem);
     do_matrix_multiply();
@@ -285,11 +288,6 @@ function make_matrix_table(matrix) {
     return table;
 }
 
-function make_matrix_elem(matrix, title) {
-    const physical_matrix = new PhysicalMatrix(matrix, title);
-    return physical_matrix.dom();
-}
-
 /*
 
 ----------------------
@@ -307,7 +305,9 @@ function animate_trashing(elem) {
     }, 800);
 }
 
-function animate_machine_generation(elem) {
+function animate_machine_generation(physical_matrix) {
+    const elem = physical_matrix.dom();
+
     function start() {
         in_progress = true;
         style_machine_running();
@@ -351,8 +351,8 @@ function create_challenge() {
 
 function populate_shelf() {
     function add(matrix, title) {
-        const elem = make_matrix_elem(matrix, title);
-        append_to_shelf(elem);
+        const physical_matrix = new PhysicalMatrix(matrix, title);
+        append_to_shelf(physical_matrix);
     }
 
     add([[0], [1]], "standard basis vector (y)");
@@ -395,8 +395,8 @@ function do_matrix_multiply() {
             congratulate();
         }
 
-        const elem = make_matrix_elem(C, "from you!");
-        animate_machine_generation(elem);
+        const physical_matrix = new PhysicalMatrix(C, "from you!");
+        animate_machine_generation(physical_matrix);
     }
 }
 
@@ -406,7 +406,7 @@ function populate_machine() {
         [1, 1],
     ];
 
-    append_to_box1(make_matrix_elem(q_matrix, "fibonacci"));
+    append_to_box1(new PhysicalMatrix(q_matrix, "fibonacci"));
 }
 
 /*
