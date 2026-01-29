@@ -1,14 +1,19 @@
 function build_application() {
+    const trash = new Trash();
+    trash.enable_drop();
+
+    const shelf = new Shelf();
+    shelf.enable_drop();
+
     style_body();
     style_shelf();
     style_machine();
     style_boxes();
     style_trash();
-    enable_drop_to_shelf();
-    enable_drop_to_trash();
+
     enable_drop_to_box1();
     enable_drop_to_box2();
-    enable_drop_to_box1();
+
     create_challenge();
     populate_shelf();
     populate_machine();
@@ -47,39 +52,54 @@ function allow_dragging_of_matrix(div) {
     div.addEventListener("dragend", dragend);
 }
 
-function enable_drop_to_trash() {
-    const trash = document.querySelector("#trash");
-
-    function dragover(e) {
-        e.preventDefault();
+class Trash {
+    constructor() {
+        this.div = document.querySelector("trash");
     }
 
-    function drop() {
-        animate_trashing(dragged_elem);
-        do_matrix_multiply();
-    }
+    enable_drop() {
+        console.log("enable drop for trash");
+        const div = this.div;
 
-    trash.addEventListener("dragover", dragover);
-    trash.addEventListener("drop", drop);
+        function dragover(e) {
+            e.preventDefault();
+        }
+
+        function drop() {
+            animate_trashing(dragged_elem);
+            do_matrix_multiply();
+        }
+
+        trash.addEventListener("dragover", dragover);
+        trash.addEventListener("drop", drop);
+    }
 }
 
-function enable_drop_to_shelf() {
-    const shelf = document.querySelector("#shelf");
 
-    function dragover(e) {
-        if (is_dragged_from("shelf")) {
-            return;
+class Shelf {
+    constructor() {
+        this.div = document.querySelector("#shelf");
+    }
+
+    enable_drop() {
+        const shelf = this.div;
+        console.log("enable drop to shelf");
+
+        function dragover(e) {
+            if (is_dragged_from("shelf")) {
+                return;
+            }
+            e.preventDefault();
         }
-        e.preventDefault();
-    }
 
-    function drop() {
-        append_to_shelf(dragged_elem);
-        do_matrix_multiply();
-    }
+        function drop() {
+            append_to_shelf(dragged_elem);
+            do_matrix_multiply();
+        }
 
-    shelf.addEventListener("dragover", dragover);
-    shelf.addEventListener("drop", drop);
+        shelf.addEventListener("dragover", dragover);
+        shelf.addEventListener("drop", drop);
+    }
 }
 
 function enable_drop_to_box1() {
