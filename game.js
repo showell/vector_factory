@@ -19,7 +19,7 @@ function build_application() {
     enable_drop_to_box2();
 
     create_challenge();
-    populate_shelf();
+    populate_shelf(shelf);
     populate_machine();
 }
 
@@ -77,7 +77,6 @@ class PhysicalMatrix  {
     }
 
     get_location() {
-        console.log("got location", this.loc);
         return this.loc;
     }
 
@@ -144,6 +143,13 @@ class Shelf {
         this.div = document.querySelector("#shelf");
     }
 
+    append_physical_matrix(physical_matrix) {
+        console.log("append to shelf");
+        physical_matrix.set_location("shelf");
+        const elem = physical_matrix.dom();
+        this.div.append(elem);
+    }
+
     handle_dragover(e) {
         if (GAME.is_dragged_from("shelf")) {
             return;
@@ -152,7 +158,7 @@ class Shelf {
     }
 
     handle_drop() {
-        append_to_shelf(GAME.dragged_physical_matrix());
+        this.append_physical_matrix(GAME.dragged_physical_matrix());
         do_matrix_multiply();
     }
 
@@ -241,12 +247,6 @@ function box_matrix(n) {
     }
 
     return div.matrix_info.matrix;
-}
-
-function append_to_shelf(physical_matrix) {
-    physical_matrix.set_location("shelf");
-    const elem = physical_matrix.dom();
-    shelf().append(elem);
 }
 
 function append_to_box1(physical_matrix) {
@@ -357,10 +357,10 @@ function create_challenge() {
     document.querySelector("#target_answer").append(answer);
 }
 
-function populate_shelf() {
+function populate_shelf(shelf) {
     function add(matrix, title) {
         const physical_matrix = new PhysicalMatrix(matrix, title);
-        append_to_shelf(physical_matrix);
+        shelf.append_physical_matrix(physical_matrix);
     }
 
     add([[0], [1]], "standard basis vector (y)");
