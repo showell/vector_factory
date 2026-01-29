@@ -32,7 +32,6 @@ into a module for a couple reasons.
 
 class Game {
     constructor() {
-        console.log("NEW GAME");
         this._dragged_physical_matrix = undefined;
     }
 
@@ -41,8 +40,7 @@ class Game {
     }
 
     is_dragged_from(loc) {
-        // TODO: still ugly!
-        return this._dragged_physical_matrix.div.matrix_info.loc == loc;
+        return this._dragged_physical_matrix.get_location() == loc;
     }
 
     dragged_physical_matrix() {
@@ -50,6 +48,7 @@ class Game {
     }
 
     dragged_matrix() {
+        // TODO: still ugly!
         return this._dragged_physical_matrix.div.matrix_info.matrix;
     }
 }
@@ -62,6 +61,7 @@ class PhysicalMatrix  {
         div.title = title;
         div.append(table);
         style_matrix_div(div);
+        this.loc = undefined;
 
         // TODO: Fix this ugliness once we have Game
         div.matrix_info = {
@@ -70,6 +70,15 @@ class PhysicalMatrix  {
 
         this.div = div;
         this.allow_dragging_of_matrix();
+    }
+
+    set_location(loc) {
+        this.loc = loc;
+    }
+
+    get_location() {
+        console.log("got location", this.loc);
+        return this.loc;
     }
 
     handle_dragstart() {
@@ -84,7 +93,6 @@ class PhysicalMatrix  {
         const self = this;
         const div = this.div;
 
-        console.log("ALLOW dragging");
         div.draggable = true;
         div.userSelect = undefined;
 
@@ -236,21 +244,21 @@ function box_matrix(n) {
 }
 
 function append_to_shelf(physical_matrix) {
+    physical_matrix.set_location("shelf");
     const elem = physical_matrix.dom();
-    elem.matrix_info.loc = "shelf";
     shelf().append(elem);
 }
 
 function append_to_box1(physical_matrix) {
+    physical_matrix.set_location("box1");
     const elem = physical_matrix.dom();
-    elem.matrix_info.loc = "box1";
     box(1).append(elem);
     do_matrix_multiply();
 }
 
 function append_to_box2(physical_matrix) {
+    physical_matrix.set_location("box2");
     const elem = physical_matrix.dom();
-    elem.matrix_info.loc = "box2";
     box(2).append(elem);
     do_matrix_multiply();
 }
@@ -315,7 +323,7 @@ function animate_machine_generation(physical_matrix) {
 
     function finish() {
         box(3).append(elem);
-        elem.matrix_info.loc = "box3";
+        physical_matrix.set_location("box3");
         style_machine_idle();
         in_progress = false;
     }
