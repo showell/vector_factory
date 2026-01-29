@@ -1,4 +1,8 @@
+let GAME;
+
 function build_application() {
+    GAME = new Game();
+
     const trash = new Trash();
     trash.enable_drop();
 
@@ -26,14 +30,28 @@ code is at the top of the file.  It is a bit difficult to extract this code out
 into a module for a couple reasons.
 */
 
-let dragged_elem;
+class Game {
+    constructor() {
+        console.log("NEW GAME");
+        this._dragged_physical_matrix = undefined;
+    }
 
-function is_dragged_from(loc) {
-    return dragged_elem.matrix_info.loc == loc;
-}
+    set_dragged_physical_matrix(matrix) {
+        this._dragged_physical_matrix = matrix;
+    }
 
-function dragged_matrix() {
-    return dragged_elem.matrix_info.matrix;
+    is_dragged_from(loc) {
+        // TODO: still ugly!
+        return this._dragged_physical_matrix.div.matrix_info.loc == loc;
+    }
+
+    dragged_physical_matrix() {
+        return this._dragged_physical_matrix;
+    }
+
+    dragged_matrix() {
+        return this._dragged_physical_matrix.div.matrix_info.matrix;
+    }
 }
 
 class PhysicalMatrix  {
@@ -54,12 +72,12 @@ class PhysicalMatrix  {
         this.allow_dragging_of_matrix();
     }
 
-    handle_dragstart(e) {
-        dragged_elem = e.target;
+    handle_dragstart() {
+        GAME.set_dragged_physical_matrix(this);
     }
 
     handle_dragend() {
-        dragged_elem = undefined;
+        GAME.set_dragged_physical_matrix(undefined);
     }
 
     allow_dragging_of_matrix() {
@@ -70,8 +88,8 @@ class PhysicalMatrix  {
         div.draggable = true;
         div.userSelect = undefined;
 
-        div.addEventListener("dragstart", (e) => {
-            self.handle_dragstart(e);
+        div.addEventListener("dragstart", () => {
+            self.handle_dragstart();
         });
 
         div.addEventListener("dragend", () => {
@@ -94,7 +112,7 @@ class Trash {
     }
 
     handle_drop() {
-        animate_trashing(dragged_elem);
+        animate_trashing(GAME.dragged_physical_matrix().dom());
         do_matrix_multiply();
     }
 
@@ -119,14 +137,14 @@ class Shelf {
     }
 
     handle_dragover(e) {
-        if (is_dragged_from("shelf")) {
+        if (GAME.is_dragged_from("shelf")) {
             return;
         }
         e.preventDefault();
     }
 
     handle_drop() {
-        append_to_shelf(dragged_elem);
+        append_to_shelf(GAME.dragged_physical_matrix().dom());
         do_matrix_multiply();
     }
 
@@ -145,14 +163,14 @@ class Shelf {
 
 function enable_drop_to_box1() {
     function dragover(e) {
-        if (box_matrix(1) || is_dragged_from("box1")) {
+        if (box_matrix(1) || GAME.is_dragged_from("box1")) {
             return;
         }
-        if (box_matrix(2) && !is_dragged_from("box2")) {
-            if (box_matrix(3) && is_dragged_from("shelf")) {
+        if (box_matrix(2) && !GAME.is_dragged_from("box2")) {
+            if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
                 return;
             }
-            if (!matrix.allow_multiply(dragged_matrix(), box_matrix(2))) {
+            if (!matrix.allow_multiply(GAME.dragged_matrix(), box_matrix(2))) {
                 return;
             }
         }
@@ -160,7 +178,7 @@ function enable_drop_to_box1() {
     }
 
     function drop() {
-        append_to_box1(dragged_elem);
+        append_to_box1(GAME.dragged_physical_matrix().dom());
     }
 
     box(1).addEventListener("dragover", dragover);
@@ -169,14 +187,14 @@ function enable_drop_to_box1() {
 
 function enable_drop_to_box2() {
     function dragover(e) {
-        if (box_matrix(2) || is_dragged_from("box2")) {
+        if (box_matrix(2) || GAME.is_dragged_from("box2")) {
             return;
         }
-        if (box_matrix(1) && !is_dragged_from("box1")) {
-            if (box_matrix(3) && is_dragged_from("shelf")) {
+        if (box_matrix(1) && !GAME.is_dragged_from("box1")) {
+            if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
                 return;
             }
-            if (!matrix.allow_multiply(box_matrix(1), dragged_matrix())) {
+            if (!matrix.allow_multiply(box_matrix(1), GAME.dragged_matrix())) {
                 return;
             }
         }
@@ -184,7 +202,7 @@ function enable_drop_to_box2() {
     }
 
     function drop() {
-        append_to_box2(dragged_elem);
+        append_to_box2(GAME.dragged_physical_matrix().dom());
     }
 
     box(2).addEventListener("dragover", dragover);
