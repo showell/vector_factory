@@ -36,6 +36,54 @@ function dragged_matrix() {
     return dragged_elem.matrix_info.matrix;
 }
 
+class PhysicalMatrix  {
+    constructor(matrix, title) {
+        const table = make_matrix_table(matrix);
+        const div = document.createElement("div");
+        div.className = "matrix-div";
+        div.title = title;
+        div.append(table);
+        style_matrix_div(div);
+
+        // TODO: Fix this ugliness once we have Game
+        div.matrix_info = {
+            matrix: matrix,
+        };
+
+        this.div = div;
+        this.allow_dragging_of_matrix();
+    }
+
+    handle_dragstart(e) {
+        dragged_elem = e.target;
+    }
+
+    handle_dragend() {
+        dragged_elem = undefined;
+    }
+
+    allow_dragging_of_matrix() {
+        const self = this;
+        const div = this.div;
+
+        console.log("ALLOW dragging");
+        div.draggable = true;
+        div.userSelect = undefined;
+
+        div.addEventListener("dragstart", (e) => {
+            self.handle_dragstart(e);
+        });
+
+        div.addEventListener("dragend", () => {
+            self.handle_dragend();
+        });
+    }
+
+    dom() {
+        return this.div;
+    }
+}
+
 class Trash {
     constructor() {
         this.div = document.querySelector("#trash");
@@ -217,54 +265,6 @@ function make_matrix_table(matrix) {
     table.appendChild(row(matrix[1]));
 
     return table;
-}
-
-class PhysicalMatrix  {
-    constructor(matrix, title) {
-        const table = make_matrix_table(matrix);
-        const div = document.createElement("div");
-        div.className = "matrix-div";
-        div.title = title;
-        div.append(table);
-        style_matrix_div(div);
-
-        // TODO: Fix this ugliness once we have Game
-        div.matrix_info = {
-            matrix: matrix,
-        };
-
-        this.div = div;
-        this.allow_dragging_of_matrix();
-    }
-
-    handle_dragstart(e) {
-        dragged_elem = e.target;
-    }
-
-    handle_dragend() {
-        dragged_elem = undefined;
-    }
-
-    allow_dragging_of_matrix() {
-        const self = this;
-        const div = this.div;
-
-        console.log("allow dragging");
-        div.draggable = true;
-        div.userSelect = undefined;
-
-        div.addEventListener("dragstart", (e) => {
-            self.handle_dragstart(e);
-        });
-
-        div.addEventListener("dragend", () => {
-            self.handle_dragend();
-        });
-    }
-
-    dom() {
-        return this.div;
-    }
 }
 
 function make_matrix_elem(matrix, title) {
