@@ -54,24 +54,31 @@ function allow_dragging_of_matrix(div) {
 
 class Trash {
     constructor() {
-        this.div = document.querySelector("trash");
+        this.div = document.querySelector("#trash");
+    }
+
+    handle_dragover(e) {
+        e.preventDefault();
+    }
+
+    handle_drop() {
+        animate_trashing(dragged_elem);
+        do_matrix_multiply();
     }
 
     enable_drop() {
-        console.log("enable drop for trash");
+        const self = this;
         const div = this.div;
 
-        function dragover(e) {
-            e.preventDefault();
-        }
+        console.log("ENABLE drop for trash");
 
-        function drop() {
-            animate_trashing(dragged_elem);
-            do_matrix_multiply();
-        }
+        div.addEventListener("dragover", (e) => {
+            self.handle_dragover(e);
+        });
 
-        trash.addEventListener("dragover", dragover);
-        trash.addEventListener("drop", drop);
+        div.addEventListener("drop", () => {
+            self.handle_drop();
+        });
     }
 }
 
@@ -81,24 +88,30 @@ class Shelf {
         this.div = document.querySelector("#shelf");
     }
 
+    handle_dragover(e) {
+        if (is_dragged_from("shelf")) {
+            return;
+        }
+        e.preventDefault();
+    }
+
+    handle_drop() {
+        append_to_shelf(dragged_elem);
+        do_matrix_multiply();
+    }
+
     enable_drop() {
-        const shelf = this.div;
-        console.log("enable drop to shelf");
+        const self = this;
+        const div = this.div;
 
-        function dragover(e) {
-            if (is_dragged_from("shelf")) {
-                return;
-            }
-            e.preventDefault();
-        }
+        console.log("ENABLE drop to shelf");
 
-        function drop() {
-            append_to_shelf(dragged_elem);
-            do_matrix_multiply();
-        }
-
-        shelf.addEventListener("dragover", dragover);
-        shelf.addEventListener("drop", drop);
+        div.addEventListener("dragover", (e) => {
+            self.handle_dragover(e);
+        });
+        div.addEventListener("drop", () => {
+            self.handle_drop();
+        });
     }
 }
 
