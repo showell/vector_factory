@@ -54,8 +54,6 @@ class Trash {
         const self = this;
         const div = this.div;
 
-        console.log("ENABLE drop for trash");
-
         div.addEventListener("dragover", (e) => {
             self.handle_dragover(e);
         });
@@ -87,8 +85,6 @@ class Shelf {
     enable_drop() {
         const self = this;
         const div = this.div;
-
-        console.log("ENABLE drop to shelf");
 
         div.addEventListener("dragover", (e) => {
             self.handle_dragover(e);
@@ -241,25 +237,30 @@ class PhysicalMatrix  {
         this.allow_dragging_of_matrix();
     }
 
+    handle_dragstart(e) {
+        dragged_elem = e.target;
+    }
+
+    handle_dragend() {
+        dragged_elem = undefined;
+    }
+
     allow_dragging_of_matrix() {
+        const self = this;
         const div = this.div;
 
         console.log("allow dragging");
         div.draggable = true;
         div.userSelect = undefined;
 
-        function dragstart(e) {
-            dragged_elem = e.target;
-        }
+        div.addEventListener("dragstart", (e) => {
+            self.handle_dragstart(e);
+        });
 
-        function dragend() {
-            dragged_elem = undefined;
-        }
-
-        div.addEventListener("dragstart", dragstart);
-        div.addEventListener("dragend", dragend);
+        div.addEventListener("dragend", () => {
+            self.handle_dragend();
+        });
     }
-
 
     dom() {
         return this.div;
