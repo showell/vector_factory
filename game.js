@@ -206,11 +206,12 @@ function make_matrix_table(matrix) {
     return table;
 }
 
-function make_matrix_elem(matrix) {
+function make_matrix_elem(matrix, title) {
     const table = make_matrix_table(matrix);
 
     const div = document.createElement("div");
     div.className = "matrix-div";
+    div.title = title;
     div.append(table);
     style_matrix_div(div);
 
@@ -283,33 +284,37 @@ function create_challenge() {
 }
 
 function populate_shelf() {
-    function add(matrix) {
-        const elem = make_matrix_elem(matrix);
+    function add(matrix, title) {
+        const elem = make_matrix_elem(matrix, title);
         append_to_shelf(elem);
     }
 
-    const swapper = [
-        [0, 1],
-        [1, 0],
-    ];
-    add(swapper);
-
-    const q_inverse = [
-        [-1, 1],
-        [1, 0],
-    ];
-    add(q_inverse);
-
-    const slicer = [
-        [0, 0],
-        [1, 0],
-    ];
-    add(slicer);
+    add([[0], [1]], "standard basis vector (y)");
 
     add([
-        [5, 27],
-        [3, -1],
-    ]);
+        [0, 1],
+        [1, 0],
+    ], "swap x and y");
+
+    add([
+        [1, 0],
+        [0, 0],
+    ], "just x");
+
+    add([
+        [0, 0],
+        [0, 1],
+    ], "just y");
+
+    add([
+        [-1, 0],
+        [0, -1],
+    ], "negator");
+
+    add([
+        [2, 0],
+        [0, 1],
+    ], "double x");
 }
 
 function do_matrix_multiply() {
@@ -324,7 +329,7 @@ function do_matrix_multiply() {
             congratulate();
         }
 
-        const elem = make_matrix_elem(C);
+        const elem = make_matrix_elem(C, "from you!");
         animate_machine_generation(elem);
     }
 }
@@ -334,10 +339,8 @@ function populate_machine() {
         [0, 1],
         [1, 1],
     ];
-    const m_01 = matrix.from_vector([0, 1]);
 
-    append_to_box1(make_matrix_elem(q_matrix));
-    append_to_box2(make_matrix_elem(m_01));
+    append_to_box1(make_matrix_elem(q_matrix, "fibonacci"));
 }
 
 /*
@@ -361,7 +364,7 @@ function setStyles(elem, styles) {
         elem.style[f] = v;
     }
 
-    console.trace(info.join("\n"));
+    // console.trace(info.join("\n"));
 }
 
 /*
