@@ -239,22 +239,33 @@ function make_matrix_table(matrix) {
     return table;
 }
 
+class PhysicalMatrix  {
+    constructor(matrix, title) {
+        const table = make_matrix_table(matrix);
+        const div = document.createElement("div");
+        div.className = "matrix-div";
+        div.title = title;
+        div.append(table);
+        style_matrix_div(div);
+
+        // TODO: Fix this ugliness once we have Game
+        div.matrix_info = {
+            matrix: matrix,
+        };
+
+        allow_dragging_of_matrix(div);
+
+        this.div = div;
+    }
+
+    dom() {
+        return this.div;
+    }
+}
+
 function make_matrix_elem(matrix, title) {
-    const table = make_matrix_table(matrix);
-
-    const div = document.createElement("div");
-    div.className = "matrix-div";
-    div.title = title;
-    div.append(table);
-    style_matrix_div(div);
-
-    div.matrix_info = {
-        matrix: matrix,
-    };
-
-    allow_dragging_of_matrix(div);
-
-    return div;
+    const physical_matrix = new PhysicalMatrix(matrix, title);
+    return physical_matrix.dom();
 }
 
 /*
