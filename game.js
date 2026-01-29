@@ -36,22 +36,6 @@ function dragged_matrix() {
     return dragged_elem.matrix_info.matrix;
 }
 
-function allow_dragging_of_matrix(div) {
-    div.draggable = true;
-    div.userSelect = undefined;
-
-    function dragstart(e) {
-        dragged_elem = e.target;
-    }
-
-    function dragend() {
-        dragged_elem = undefined;
-    }
-
-    div.addEventListener("dragstart", dragstart);
-    div.addEventListener("dragend", dragend);
-}
-
 class Trash {
     constructor() {
         this.div = document.querySelector("#trash");
@@ -253,10 +237,29 @@ class PhysicalMatrix  {
             matrix: matrix,
         };
 
-        allow_dragging_of_matrix(div);
-
         this.div = div;
+        this.allow_dragging_of_matrix();
     }
+
+    allow_dragging_of_matrix() {
+        const div = this.div;
+
+        console.log("allow dragging");
+        div.draggable = true;
+        div.userSelect = undefined;
+
+        function dragstart(e) {
+            dragged_elem = e.target;
+        }
+
+        function dragend() {
+            dragged_elem = undefined;
+        }
+
+        div.addEventListener("dragstart", dragstart);
+        div.addEventListener("dragend", dragend);
+    }
+
 
     dom() {
         return this.div;
