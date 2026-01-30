@@ -1,4 +1,8 @@
+let Matrix = globalThis.APP.matrix;
 let GAME;
+
+const winner = Matrix.from_vector([7, 0]);
+
 
 function build_application() {
     const shelf = new Shelf();
@@ -73,9 +77,9 @@ class Game {
         const C = this.matrix3;
 
         if (A && B && !C && !in_progress) {
-            const C = matrix.multiply(A, B);
+            const C = Matrix.multiply(A, B);
 
-            if (matrix.eq(C, winner)) {
+            if (Matrix.eq(C, winner)) {
                 congratulate();
             }
 
@@ -271,7 +275,7 @@ class Box1 {
             if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                 return;
             }
-            if (!matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)) {
+            if (!Matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)) {
                 return;
             }
         }
@@ -317,7 +321,7 @@ class Box2 {
             if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                 return;
             }
-            if (!matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())) {
+            if (!Matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())) {
                 return;
             }
         }
@@ -427,10 +431,7 @@ function make_matrix_table(matrix) {
     MISC
 */
 
-let matrix = globalThis.APP.matrix;
 let in_progress = false;
-
-const winner = matrix.from_vector([7, 0]);
 
 function congratulate() {
     const p = document.createElement("p");
