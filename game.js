@@ -255,7 +255,6 @@ class Shelf {
         });
 
         div.addEventListener("drop", () => {
-            console.log("drop on shelf");
             self.handle_drop();
         });
     }
@@ -276,10 +275,15 @@ class Box1 {
         GAME.do_matrix_multiply();
     }
 
+    already_occupied() {
+        return GAME.matrix1;
+    }
+
     handle_dragover(e) {
-        if (GAME.matrix1 || GAME.is_dragged_from("box1")) {
+        if (this.already_occupied()) {
             return;
         }
+
         if (GAME.matrix2 && !GAME.is_dragged_from("box2")) {
             if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                 return;
@@ -322,10 +326,15 @@ class Box2 {
         GAME.do_matrix_multiply();
     }
 
+    already_occupied() {
+        return GAME.matrix2;
+    }
+
     handle_dragover(e) {
-        if (GAME.matrix2 || GAME.is_dragged_from("box2")) {
+        if (this.already_occupied()) {
             return;
         }
+
         if (GAME.matrix1 && !GAME.is_dragged_from("box1")) {
             if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                 return;
