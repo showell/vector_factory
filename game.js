@@ -185,8 +185,9 @@ class Trash {
         this.div = document.querySelector("#trash");
     }
 
-    handle_dragover(e) {
-        e.preventDefault();
+    accepts_drop() {
+        // We let you drop ANY matrix.
+        return true;
     }
 
     handle_drop() {
@@ -208,7 +209,9 @@ class Trash {
         const div = this.div;
 
         div.addEventListener("dragover", (e) => {
-            self.handle_dragover(e);
+            if (self.accepts_drop()) {
+                e.preventDefault();
+            }
         });
 
         div.addEventListener("drop", () => {
