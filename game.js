@@ -271,9 +271,7 @@ class Box1 {
             if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                 return;
             }
-            if (
-                !matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)
-            ) {
+            if (!matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)) {
                 return;
             }
         }
@@ -319,9 +317,7 @@ class Box2 {
             if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                 return;
             }
-            if (
-                !matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())
-            ) {
+            if (!matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())) {
                 return;
             }
         }
@@ -377,7 +373,6 @@ class Box3 {
         start();
         setTimeout(finish, 400);
     }
-
 }
 
 /*
