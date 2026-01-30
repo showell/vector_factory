@@ -102,6 +102,22 @@ class Game {
         start();
         setTimeout(finish, 400);
     }
+
+    clear_location(loc) {
+        switch (loc) {
+            case "box1":
+                this.matrix1 = undefined;
+                break;
+
+            case "box2":
+                this.matrix2 = undefined;
+                break;
+
+            case "box3":
+                this.matrix3 = undefined;
+                break;
+        }
+    }
 }
 
 class PhysicalMatrix {
@@ -124,19 +140,7 @@ class PhysicalMatrix {
             return;
         }
 
-        switch (this.loc) {
-            case "box1":
-                GAME.matrix1 = undefined;
-                break;
-
-            case "box2":
-                GAME.matrix2 = undefined;
-                break;
-
-            case "box3":
-                GAME.matrix3 = undefined;
-                break;
-        }
+        GAME.clear_location(this.loc);
 
         switch (new_loc) {
             case "box1":
@@ -199,12 +203,16 @@ class Trash {
     }
 
     handle_drop() {
-        const elem = GAME.dragged_physical_matrix().dom();
-        const trash = document.querySelector("#trash");
-        trash.append(elem);
+        const div = this.div;
+
+        const physical_matrix = GAME.dragged_physical_matrix();
+        GAME.clear_location(physical_matrix.get_location());
+        const matrix_elem = physical_matrix.dom();
+
+        div.append(matrix_elem);
 
         setTimeout(() => {
-            elem.remove();
+            matrix_elem.remove();
         }, 300);
     }
 
