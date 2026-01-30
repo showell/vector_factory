@@ -279,20 +279,20 @@ class Box1 {
         return GAME.matrix1;
     }
 
-    handle_dragover(e) {
+    accepts_drop() {
         if (this.already_occupied()) {
-            return;
+            return false;
         }
 
-        if (GAME.matrix2 && !GAME.is_dragged_from("box2")) {
-            if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
-                return;
-            }
-            if (!Matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)) {
-                return;
-            }
+        if (!GAME.matrix2 || GAME.is_dragged_from("box2")) {
+            return true;
         }
-        e.preventDefault();
+
+        if (GAME.matrix3) {
+            return false;
+        }
+
+        return Matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2);
     }
 
     handle_drop() {
@@ -304,8 +304,11 @@ class Box1 {
         const div = this.div;
 
         div.addEventListener("dragover", (e) => {
-            self.handle_dragover(e);
+            if (self.accepts_drop()) {
+                e.preventDefault();
+            }
         });
+
         div.addEventListener("drop", () => {
             self.handle_drop();
         });
