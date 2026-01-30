@@ -1,8 +1,6 @@
 let GAME;
 
 function build_application() {
-    GAME = new Game();
-
     const shelf = new Shelf();
     shelf.enable_drop();
 
@@ -12,8 +10,13 @@ function build_application() {
     const box2 = new Box2();
     box2.enable_drop();
 
+    const box3 = new Box3();
+    // not a drop target
+
     const trash = new Trash();
     trash.enable_drop();
+
+    GAME = new Game(box1, box2, box3);
 
     style_body();
     style_shelf();
@@ -34,7 +37,11 @@ into a module for a couple reasons.
 */
 
 class Game {
-    constructor() {
+    constructor(box1, box2, box3) {
+        this.box1 = box1;
+        this.box2 = box2;
+        this.box3 = box3;
+
         this._dragged_physical_matrix = undefined;
     }
 
@@ -53,6 +60,25 @@ class Game {
     dragged_matrix() {
         // TODO: still ugly!
         return this._dragged_physical_matrix.div.matrix_info.matrix;
+    }
+
+    do_matrix_multiply() {
+        const box3 = this.box3;
+
+        const A = box_matrix(1);
+        const B = box_matrix(2);
+        const C = box_matrix(3);
+
+        if (A && B && !C && !in_progress) {
+            const C = matrix.multiply(A, B);
+
+            if (matrix.eq(C, winner)) {
+                congratulate();
+            }
+
+            const physical_matrix = new PhysicalMatrix(C, "from you!");
+            animate_machine_generation(box3, physical_matrix);
+        }
     }
 }
 
@@ -123,7 +149,6 @@ class Trash {
 
     handle_drop() {
         animate_trashing(GAME.dragged_physical_matrix().dom());
-        do_matrix_multiply();
     }
 
     enable_drop() {
@@ -161,7 +186,6 @@ class Shelf {
 
     handle_drop() {
         this.append_physical_matrix(GAME.dragged_physical_matrix());
-        do_matrix_multiply();
     }
 
     enable_drop() {
@@ -188,7 +212,7 @@ class Box1 {
         physical_matrix.set_location("box1");
         const elem = physical_matrix.dom();
         div.append(elem);
-        do_matrix_multiply();
+        GAME.do_matrix_multiply();
     }
 
     enable_drop() {
@@ -230,7 +254,7 @@ class Box2 {
         physical_matrix.set_location("box2");
         const elem = physical_matrix.dom();
         div.append(elem);
-        do_matrix_multiply();
+        GAME.do_matrix_multiply();
     }
 
     enable_drop() {
@@ -258,6 +282,20 @@ class Box2 {
 
         div.addEventListener("dragover", dragover);
         div.addEventListener("drop", drop);
+    }
+}
+
+class Box3 {
+    constructor() {
+        this.div = document.querySelector("#machine_box3");
+    }
+
+    append_physical_matrix(physical_matrix) {
+        const div = this.div;
+
+        physical_matrix.set_location("box3");
+        const elem = physical_matrix.dom();
+        div.append(elem);
     }
 }
 
@@ -333,16 +371,14 @@ function animate_trashing(elem) {
     }, 800);
 }
 
-function animate_machine_generation(physical_matrix) {
-    const elem = physical_matrix.dom();
-
+function animate_machine_generation(box3, physical_matrix) {
     function start() {
         in_progress = true;
         style_machine_running();
     }
 
     function finish() {
-        box(3).append(elem);
+        box3.append_physical_matrix(physical_matrix);
         physical_matrix.set_location("box3");
         style_machine_idle();
         in_progress = false;
@@ -409,23 +445,6 @@ function populate_shelf(shelf) {
         [2, 0],
         [0, 1],
     ], "double x");
-}
-
-function do_matrix_multiply() {
-    const A = box_matrix(1);
-    const B = box_matrix(2);
-    const C = box_matrix(3);
-
-    if (A && B && !C && !in_progress) {
-        const C = matrix.multiply(A, B);
-
-        if (matrix.eq(C, winner)) {
-            congratulate();
-        }
-
-        const physical_matrix = new PhysicalMatrix(C, "from you!");
-        animate_machine_generation(physical_matrix);
-    }
 }
 
 function populate_machine(box1) {
