@@ -80,8 +80,27 @@ class Game {
             }
 
             const physical_matrix = new PhysicalMatrix(C, "from you!");
-            animate_machine_generation(box3, physical_matrix);
+            this.animate_machine_generation(physical_matrix);
         }
+    }
+
+    animate_machine_generation(physical_matrix) {
+        const box3 = this.box3;
+
+        function start() {
+            in_progress = true;
+            style_machine_running();
+        }
+
+        function finish() {
+            box3.set_physical_matrix(physical_matrix);
+            physical_matrix.set_location("box3");
+            style_machine_idle();
+            in_progress = false;
+        }
+
+        start();
+        setTimeout(finish, 400);
     }
 }
 
@@ -385,31 +404,6 @@ function make_matrix_table(matrix) {
     table.appendChild(row(matrix[1]));
 
     return table;
-}
-
-/*
-
-----------------------
-
-ANIMATIONS
-
-*/
-
-function animate_machine_generation(box3, physical_matrix) {
-    function start() {
-        in_progress = true;
-        style_machine_running();
-    }
-
-    function finish() {
-        box3.set_physical_matrix(physical_matrix);
-        physical_matrix.set_location("box3");
-        style_machine_idle();
-        in_progress = false;
-    }
-
-    start();
-    setTimeout(finish, 700);
 }
 
 /*
