@@ -42,6 +42,10 @@ class Game {
         this.box2 = box2;
         this.box3 = box3;
 
+        this.matrix1 = undefined;
+        this.matrix2 = undefined;
+        this.matrix3 = undefined;
+
         this._dragged_physical_matrix = undefined;
     }
 
@@ -58,16 +62,15 @@ class Game {
     }
 
     dragged_matrix() {
-        // TODO: still ugly!
-        return this._dragged_physical_matrix.div.matrix_info.matrix;
+        return this._dragged_physical_matrix.matrix;
     }
 
     do_matrix_multiply() {
         const box3 = this.box3;
 
-        const A = box_matrix(1);
-        const B = box_matrix(2);
-        const C = box_matrix(3);
+        const A = this.matrix1;
+        const B = this.matrix2;
+        const C = this.matrix3;
 
         if (A && B && !C && !in_progress) {
             const C = matrix.multiply(A, B);
@@ -84,25 +87,54 @@ class Game {
 
 class PhysicalMatrix  {
     constructor(matrix, title) {
+        this.matrix = matrix;
+        this.loc = undefined;
+
         const table = make_matrix_table(matrix);
         const div = document.createElement("div");
-        div.className = "matrix-div";
         div.title = title;
         div.append(table);
         style_matrix_div(div);
-        this.loc = undefined;
-
-        // TODO: Fix this ugliness once we have Game
-        div.matrix_info = {
-            matrix: matrix,
-        };
 
         this.div = div;
         this.allow_dragging_of_matrix();
     }
 
-    set_location(loc) {
-        this.loc = loc;
+    set_location(new_loc) {
+        if (new_loc === this.loc) {
+            return;
+        }
+
+        switch(this.loc) {
+            case "box1":
+                GAME.matrix1 = undefined;
+                break;
+
+            case "box2":
+                GAME.matrix2 = undefined;
+                break;
+
+            case "box3":
+                GAME.matrix3 = undefined;
+                break;
+        }
+
+        switch(new_loc) {
+            case "box1":
+                GAME.matrix1 = this.matrix;
+                break;
+
+            case "box2":
+                console.log("set matrix2", this.matrix);
+                GAME.matrix2 = this.matrix;
+                break;
+
+            case "box3":
+                GAME.matrix3 = this.matrix;
+                break;
+        }
+
+        this.loc = new_loc;
     }
 
     get_location() {
@@ -206,10 +238,11 @@ class Box1 {
         this.div = document.querySelector("#machine_box1");
     }
 
-    append_physical_matrix(physical_matrix) {
+    set_physical_matrix(physical_matrix) {
         const div = this.div;
 
         physical_matrix.set_location("box1");
+
         const elem = physical_matrix.dom();
         div.append(elem);
         GAME.do_matrix_multiply();
@@ -220,14 +253,14 @@ class Box1 {
         const div = this.div;
 
         function dragover(e) {
-            if (box_matrix(1) || GAME.is_dragged_from("box1")) {
+            if (GAME.matrix1 || GAME.is_dragged_from("box1")) {
                 return;
             }
-            if (box_matrix(2) && !GAME.is_dragged_from("box2")) {
-                if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
+            if (GAME.matrix2 && !GAME.is_dragged_from("box2")) {
+                if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                     return;
                 }
-                if (!matrix.allow_multiply(GAME.dragged_matrix(), box_matrix(2))) {
+                if (!matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)) {
                     return;
                 }
             }
@@ -235,7 +268,7 @@ class Box1 {
         }
 
         function drop() {
-            self.append_physical_matrix(GAME.dragged_physical_matrix());
+            self.set_physical_matrix(GAME.dragged_physical_matrix());
         }
 
         div.addEventListener("dragover", dragover);
@@ -248,7 +281,7 @@ class Box2 {
         this.div = document.querySelector("#machine_box2");
     }
 
-    append_physical_matrix(physical_matrix) {
+    set_physical_matrix(physical_matrix) {
         const div = this.div;
 
         physical_matrix.set_location("box2");
@@ -262,14 +295,14 @@ class Box2 {
         const div = this.div;
 
         function dragover(e) {
-            if (box_matrix(2) || GAME.is_dragged_from("box2")) {
+            if (GAME.matrix2 || GAME.is_dragged_from("box2")) {
                 return;
             }
-            if (box_matrix(1) && !GAME.is_dragged_from("box1")) {
-                if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
+            if (GAME.matrix1 && !GAME.is_dragged_from("box1")) {
+                if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                     return;
                 }
-                if (!matrix.allow_multiply(box_matrix(1), GAME.dragged_matrix())) {
+                if (!matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())) {
                     return;
                 }
             }
@@ -277,7 +310,7 @@ class Box2 {
         }
 
         function drop() {
-            self.append_physical_matrix(GAME.dragged_physical_matrix());
+            self.set_physical_matrix(GAME.dragged_physical_matrix());
         }
 
         div.addEventListener("dragover", dragover);
@@ -290,11 +323,12 @@ class Box3 {
         this.div = document.querySelector("#machine_box3");
     }
 
-    append_physical_matrix(physical_matrix) {
+    set_physical_matrix(physical_matrix) {
         const div = this.div;
 
         physical_matrix.set_location("box3");
         const elem = physical_matrix.dom();
+        GAME.matrix3 = physical_matrix.matrix;
         div.append(elem);
     }
 }
@@ -309,16 +343,6 @@ END OF DRAG/DROP
 
 function box(n) {
     return document.querySelector(`#machine_box${n}`);
-}
-
-function box_matrix(n) {
-    const div = document.querySelector(`#machine_box${n} .matrix-div`);
-
-    if (!div) {
-        return undefined;
-    }
-
-    return div.matrix_info.matrix;
 }
 
 /*
@@ -378,7 +402,7 @@ function animate_machine_generation(box3, physical_matrix) {
     }
 
     function finish() {
-        box3.append_physical_matrix(physical_matrix);
+        box3.set_physical_matrix(physical_matrix);
         physical_matrix.set_location("box3");
         style_machine_idle();
         in_progress = false;
@@ -453,7 +477,7 @@ function populate_machine(box1) {
         [1, 1],
     ];
 
-    box1.append_physical_matrix(new PhysicalMatrix(q_matrix, "fibonacci"));
+    box1.set_physical_matrix(new PhysicalMatrix(q_matrix, "fibonacci"));
 }
 
 /*
