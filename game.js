@@ -80,30 +80,11 @@ class Game {
             }
 
             const physical_matrix = new PhysicalMatrix(C, "from you!");
-            this.animate_machine_generation(physical_matrix);
+            box3.animate_machine_generation(physical_matrix);
         }
     }
 
-    animate_machine_generation(physical_matrix) {
-        const box3 = this.box3;
-
-        function start() {
-            in_progress = true;
-            style_machine_running();
-        }
-
-        function finish() {
-            box3.set_physical_matrix(physical_matrix);
-            physical_matrix.set_location("box3");
-            style_machine_idle();
-            in_progress = false;
-        }
-
-        start();
-        setTimeout(finish, 400);
-    }
-
-    clear_location(loc) {
+    clear_matrix(loc) {
         switch (loc) {
             case "box1":
                 this.matrix1 = undefined;
@@ -115,6 +96,22 @@ class Game {
 
             case "box3":
                 this.matrix3 = undefined;
+                break;
+        }
+    }
+
+    set_matrix(loc, matrix) {
+        switch (loc) {
+            case "box1":
+                this.matrix1 = matrix;
+                break;
+
+            case "box2":
+                this.matrix2 = matrix;
+                break;
+
+            case "box3":
+                this.matrix3 = matrix;
                 break;
         }
     }
@@ -140,22 +137,8 @@ class PhysicalMatrix {
             return;
         }
 
-        GAME.clear_location(this.loc);
-
-        switch (new_loc) {
-            case "box1":
-                GAME.matrix1 = this.matrix;
-                break;
-
-            case "box2":
-                console.log("set matrix2", this.matrix);
-                GAME.matrix2 = this.matrix;
-                break;
-
-            case "box3":
-                GAME.matrix3 = this.matrix;
-                break;
-        }
+        GAME.clear_matrix(this.loc);
+        GAME.set_matrix(new_loc, this.matrix);
 
         this.loc = new_loc;
     }
@@ -206,7 +189,7 @@ class Trash {
         const div = this.div;
 
         const physical_matrix = GAME.dragged_physical_matrix();
-        GAME.clear_location(physical_matrix.get_location());
+        GAME.clear_matrix(physical_matrix.get_location());
         const matrix_elem = physical_matrix.dom();
 
         div.append(matrix_elem);
@@ -367,6 +350,26 @@ class Box3 {
         GAME.matrix3 = physical_matrix.matrix;
         div.append(elem);
     }
+
+    animate_machine_generation(physical_matrix) {
+        const self = this;
+
+        function start() {
+            in_progress = true;
+            style_machine_running();
+        }
+
+        function finish() {
+            self.set_physical_matrix(physical_matrix);
+            physical_matrix.set_location("box3");
+            style_machine_idle();
+            in_progress = false;
+        }
+
+        start();
+        setTimeout(finish, 400);
+    }
+
 }
 
 /*
