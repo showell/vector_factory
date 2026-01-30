@@ -231,11 +231,13 @@ class Shelf {
         this.div.append(elem);
     }
 
-    handle_dragover(e) {
-        if (GAME.is_dragged_from("shelf")) {
-            return;
-        }
-        e.preventDefault();
+    accepts_drop() {
+        // We don't accept drops from the same shelf yet,
+        // as it would be a bit confusing to append the matrix
+        // to the end of the shelf if the drop target is toward
+        // the front. Just punting on it for now. We could eventually
+        // allow users to re-arrange the shelf.
+        return !GAME.is_dragged_from("shelf");
     }
 
     handle_drop() {
@@ -247,9 +249,13 @@ class Shelf {
         const div = this.div;
 
         div.addEventListener("dragover", (e) => {
-            self.handle_dragover(e);
+            if (self.accepts_drop()) {
+                e.preventDefault();
+            }
         });
+
         div.addEventListener("drop", () => {
+            console.log("drop on shelf");
             self.handle_drop();
         });
     }
