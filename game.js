@@ -263,33 +263,37 @@ class Box1 {
         GAME.do_matrix_multiply();
     }
 
+    handle_dragover(e) {
+        if (GAME.matrix1 || GAME.is_dragged_from("box1")) {
+            return;
+        }
+        if (GAME.matrix2 && !GAME.is_dragged_from("box2")) {
+            if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
+                return;
+            }
+            if (
+                !matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)
+            ) {
+                return;
+            }
+        }
+        e.preventDefault();
+    }
+
+    handle_drop() {
+        this.set_physical_matrix(GAME.dragged_physical_matrix());
+    }
+
     enable_drop() {
         const self = this;
         const div = this.div;
 
-        function dragover(e) {
-            if (GAME.matrix1 || GAME.is_dragged_from("box1")) {
-                return;
-            }
-            if (GAME.matrix2 && !GAME.is_dragged_from("box2")) {
-                if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
-                    return;
-                }
-                if (
-                    !matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)
-                ) {
-                    return;
-                }
-            }
-            e.preventDefault();
-        }
-
-        function drop() {
-            self.set_physical_matrix(GAME.dragged_physical_matrix());
-        }
-
-        div.addEventListener("dragover", dragover);
-        div.addEventListener("drop", drop);
+        div.addEventListener("dragover", (e) => {
+            self.handle_dragover(e);
+        });
+        div.addEventListener("drop", () => {
+            self.handle_drop();
+        });
     }
 }
 
@@ -307,33 +311,37 @@ class Box2 {
         GAME.do_matrix_multiply();
     }
 
+    handle_dragover(e) {
+        if (GAME.matrix2 || GAME.is_dragged_from("box2")) {
+            return;
+        }
+        if (GAME.matrix1 && !GAME.is_dragged_from("box1")) {
+            if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
+                return;
+            }
+            if (
+                !matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())
+            ) {
+                return;
+            }
+        }
+        e.preventDefault();
+    }
+
+    handle_drop() {
+        this.set_physical_matrix(GAME.dragged_physical_matrix());
+    }
+
     enable_drop() {
         const self = this;
         const div = this.div;
 
-        function dragover(e) {
-            if (GAME.matrix2 || GAME.is_dragged_from("box2")) {
-                return;
-            }
-            if (GAME.matrix1 && !GAME.is_dragged_from("box1")) {
-                if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
-                    return;
-                }
-                if (
-                    !matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())
-                ) {
-                    return;
-                }
-            }
-            e.preventDefault();
-        }
-
-        function drop() {
-            self.set_physical_matrix(GAME.dragged_physical_matrix());
-        }
-
-        div.addEventListener("dragover", dragover);
-        div.addEventListener("drop", drop);
+        div.addEventListener("dragover", (e) => {
+            self.handle_dragover(e);
+        });
+        div.addEventListener("drop", () => {
+            self.handle_drop();
+        });
     }
 }
 
