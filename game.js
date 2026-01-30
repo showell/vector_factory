@@ -23,7 +23,7 @@ function build_application() {
 
     create_challenge();
     populate_shelf(shelf);
-    populate_machine();
+    populate_machine(box1);
 }
 
 /*
@@ -182,7 +182,17 @@ class Box1 {
         this.div = document.querySelector("#machine_box1");
     }
 
+    append_physical_matrix(physical_matrix) {
+        const div = this.div;
+
+        physical_matrix.set_location("box1");
+        const elem = physical_matrix.dom();
+        div.append(elem);
+        do_matrix_multiply();
+    }
+
     enable_drop() {
+        const self = this;
         const div = this.div;
 
         function dragover(e) {
@@ -201,7 +211,7 @@ class Box1 {
         }
 
         function drop() {
-            append_to_box1(GAME.dragged_physical_matrix());
+            self.append_physical_matrix(GAME.dragged_physical_matrix());
         }
 
         div.addEventListener("dragover", dragover);
@@ -214,7 +224,17 @@ class Box2 {
         this.div = document.querySelector("#machine_box2");
     }
 
+    append_physical_matrix(physical_matrix) {
+        const div = this.div;
+
+        physical_matrix.set_location("box2");
+        const elem = physical_matrix.dom();
+        div.append(elem);
+        do_matrix_multiply();
+    }
+
     enable_drop() {
+        const self = this;
         const div = this.div;
 
         function dragover(e) {
@@ -233,7 +253,7 @@ class Box2 {
         }
 
         function drop() {
-            append_to_box2(GAME.dragged_physical_matrix());
+            self.append_physical_matrix(GAME.dragged_physical_matrix());
         }
 
         div.addEventListener("dragover", dragover);
@@ -261,20 +281,6 @@ function box_matrix(n) {
     }
 
     return div.matrix_info.matrix;
-}
-
-function append_to_box1(physical_matrix) {
-    physical_matrix.set_location("box1");
-    const elem = physical_matrix.dom();
-    box(1).append(elem);
-    do_matrix_multiply();
-}
-
-function append_to_box2(physical_matrix) {
-    physical_matrix.set_location("box2");
-    const elem = physical_matrix.dom();
-    box(2).append(elem);
-    do_matrix_multiply();
 }
 
 /*
@@ -422,13 +428,13 @@ function do_matrix_multiply() {
     }
 }
 
-function populate_machine() {
+function populate_machine(box1) {
     const q_matrix = [
         [0, 1],
         [1, 1],
     ];
 
-    append_to_box1(new PhysicalMatrix(q_matrix, "fibonacci"));
+    box1.append_physical_matrix(new PhysicalMatrix(q_matrix, "fibonacci"));
 }
 
 /*
