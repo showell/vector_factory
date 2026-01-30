@@ -85,7 +85,7 @@ class Game {
     }
 }
 
-class PhysicalMatrix  {
+class PhysicalMatrix {
     constructor(matrix, title) {
         this.matrix = matrix;
         this.loc = undefined;
@@ -105,7 +105,7 @@ class PhysicalMatrix  {
             return;
         }
 
-        switch(this.loc) {
+        switch (this.loc) {
             case "box1":
                 GAME.matrix1 = undefined;
                 break;
@@ -119,7 +119,7 @@ class PhysicalMatrix  {
                 break;
         }
 
-        switch(new_loc) {
+        switch (new_loc) {
             case "box1":
                 GAME.matrix1 = this.matrix;
                 break;
@@ -197,7 +197,6 @@ class Trash {
     }
 }
 
-
 class Shelf {
     constructor() {
         this.div = document.querySelector("#shelf");
@@ -260,7 +259,9 @@ class Box1 {
                 if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                     return;
                 }
-                if (!matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)) {
+                if (
+                    !matrix.allow_multiply(GAME.dragged_matrix(), GAME.matrix2)
+                ) {
                     return;
                 }
             }
@@ -302,7 +303,9 @@ class Box2 {
                 if (GAME.matrix3 && GAME.is_dragged_from("shelf")) {
                     return;
                 }
-                if (!matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())) {
+                if (
+                    !matrix.allow_multiply(GAME.matrix1, GAME.dragged_matrix())
+                ) {
                     return;
                 }
             }
@@ -445,30 +448,45 @@ function populate_shelf(shelf) {
 
     add([[0], [1]], "standard basis vector (y)");
 
-    add([
-        [0, 1],
-        [1, 0],
-    ], "swap x and y");
+    add(
+        [
+            [0, 1],
+            [1, 0],
+        ],
+        "swap x and y",
+    );
 
-    add([
-        [1, 0],
-        [0, 0],
-    ], "just x");
+    add(
+        [
+            [1, 0],
+            [0, 0],
+        ],
+        "just x",
+    );
 
-    add([
-        [0, 0],
-        [0, 1],
-    ], "just y");
+    add(
+        [
+            [0, 0],
+            [0, 1],
+        ],
+        "just y",
+    );
 
-    add([
-        [-1, 0],
-        [0, -1],
-    ], "negator");
+    add(
+        [
+            [-1, 0],
+            [0, -1],
+        ],
+        "negator",
+    );
 
-    add([
-        [2, 0],
-        [0, 1],
-    ], "double x");
+    add(
+        [
+            [2, 0],
+            [0, 1],
+        ],
+        "double x",
+    );
 }
 
 function populate_machine(box1) {
@@ -491,8 +509,8 @@ function setStyles(elem, styles) {
     const label = elem.id
         ? `#${elem.id}`
         : elem.className
-        ? `.${elem.className}`
-        : elem.tagName;
+          ? `.${elem.className}`
+          : elem.tagName;
 
     info.push(`\nSetting styles for ${label}\n`);
 
