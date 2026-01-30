@@ -363,6 +363,7 @@ class Box3 {
         const self = this;
 
         function start() {
+            new Audio("ding.mp3").play();
             in_progress = true;
             style_machine_running();
         }
