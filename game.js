@@ -3,20 +3,23 @@ let GAME;
 function build_application() {
     GAME = new Game();
 
-    const trash = new Trash();
-    trash.enable_drop();
-
     const shelf = new Shelf();
     shelf.enable_drop();
+
+    const box1 = new Box1();
+    box1.enable_drop();
+
+    const box2 = new Box2();
+    box2.enable_drop();
+
+    const trash = new Trash();
+    trash.enable_drop();
 
     style_body();
     style_shelf();
     style_machine();
     style_boxes();
     style_trash();
-
-    enable_drop_to_box1();
-    enable_drop_to_box2();
 
     create_challenge();
     populate_shelf(shelf);
@@ -144,7 +147,6 @@ class Shelf {
     }
 
     append_physical_matrix(physical_matrix) {
-        console.log("append to shelf");
         physical_matrix.set_location("shelf");
         const elem = physical_matrix.dom();
         this.div.append(elem);
@@ -175,52 +177,68 @@ class Shelf {
     }
 }
 
-function enable_drop_to_box1() {
-    function dragover(e) {
-        if (box_matrix(1) || GAME.is_dragged_from("box1")) {
-            return;
-        }
-        if (box_matrix(2) && !GAME.is_dragged_from("box2")) {
-            if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
-                return;
-            }
-            if (!matrix.allow_multiply(GAME.dragged_matrix(), box_matrix(2))) {
-                return;
-            }
-        }
-        e.preventDefault();
+class Box1 {
+    constructor() {
+        this.div = document.querySelector("#machine_box1");
     }
 
-    function drop() {
-        append_to_box1(GAME.dragged_physical_matrix());
-    }
+    enable_drop() {
+        const div = this.div;
 
-    box(1).addEventListener("dragover", dragover);
-    box(1).addEventListener("drop", drop);
+        function dragover(e) {
+            if (box_matrix(1) || GAME.is_dragged_from("box1")) {
+                return;
+            }
+            if (box_matrix(2) && !GAME.is_dragged_from("box2")) {
+                if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
+                    return;
+                }
+                if (!matrix.allow_multiply(GAME.dragged_matrix(), box_matrix(2))) {
+                    return;
+                }
+            }
+            e.preventDefault();
+        }
+
+        function drop() {
+            append_to_box1(GAME.dragged_physical_matrix());
+        }
+
+        div.addEventListener("dragover", dragover);
+        div.addEventListener("drop", drop);
+    }
 }
 
-function enable_drop_to_box2() {
-    function dragover(e) {
-        if (box_matrix(2) || GAME.is_dragged_from("box2")) {
-            return;
-        }
-        if (box_matrix(1) && !GAME.is_dragged_from("box1")) {
-            if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
-                return;
-            }
-            if (!matrix.allow_multiply(box_matrix(1), GAME.dragged_matrix())) {
-                return;
-            }
-        }
-        e.preventDefault();
+class Box2 {
+    constructor() {
+        this.div = document.querySelector("#machine_box2");
     }
 
-    function drop() {
-        append_to_box2(GAME.dragged_physical_matrix());
-    }
+    enable_drop() {
+        const div = this.div;
 
-    box(2).addEventListener("dragover", dragover);
-    box(2).addEventListener("drop", drop);
+        function dragover(e) {
+            if (box_matrix(2) || GAME.is_dragged_from("box2")) {
+                return;
+            }
+            if (box_matrix(1) && !GAME.is_dragged_from("box1")) {
+                if (box_matrix(3) && GAME.is_dragged_from("shelf")) {
+                    return;
+                }
+                if (!matrix.allow_multiply(box_matrix(1), GAME.dragged_matrix())) {
+                    return;
+                }
+            }
+            e.preventDefault();
+        }
+
+        function drop() {
+            append_to_box2(GAME.dragged_physical_matrix());
+        }
+
+        div.addEventListener("dragover", dragover);
+        div.addEventListener("drop", drop);
+    }
 }
 
 /*
@@ -233,10 +251,6 @@ END OF DRAG/DROP
 
 function box(n) {
     return document.querySelector(`#machine_box${n}`);
-}
-
-function shelf() {
-    return document.querySelector("#shelf");
 }
 
 function box_matrix(n) {
