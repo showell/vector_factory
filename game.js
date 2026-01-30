@@ -180,7 +180,13 @@ class Trash {
     }
 
     handle_drop() {
-        animate_trashing(GAME.dragged_physical_matrix().dom());
+        const elem = GAME.dragged_physical_matrix().dom();
+        const trash = document.querySelector("#trash");
+        trash.append(elem);
+
+        setTimeout(() => {
+            elem.remove();
+        }, 300);
     }
 
     enable_drop() {
@@ -388,15 +394,6 @@ function make_matrix_table(matrix) {
 ANIMATIONS
 
 */
-
-function animate_trashing(elem) {
-    const trash = document.querySelector("#trash");
-    trash.append(elem);
-
-    setTimeout(() => {
-        elem.remove();
-    }, 800);
-}
 
 function animate_machine_generation(box3, physical_matrix) {
     function start() {
